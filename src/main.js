@@ -1,11 +1,17 @@
 import Vue from 'vue'
-import './plugins/vuetify'
-import App from './App.vue'
+import Vuetify from 'vuetify/lib'
+
+import App from './app.vue'
 import router from './router'
 import store from './store'
-import './stylus/main.styl'
+
+import './assets/stylus/main.styl'
 import 'roboto-fontface/css/roboto/roboto-fontface.css'
-import 'material-design-icons-iconfont/dist/material-design-icons.css'
+import '@mdi/font/css/materialdesignicons.css'
+
+Vue.use(Vuetify, {
+  iconfont: 'mdi'
+})
 
 Vue.config.productionTip = false
 
