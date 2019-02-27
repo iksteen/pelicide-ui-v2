@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify/lib'
 
-import Fullscreen from './fullscreen'
+import Fullscreen from './plugins/fullscreen'
 import App from './app.vue'
 import router from './router'
 import store from './store'
