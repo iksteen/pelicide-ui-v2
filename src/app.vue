@@ -32,6 +32,25 @@ export default {
     EditorPanel,
     PreviewPanel
   },
+  data () {
+    return {
+      navigationVisibleBeforeFullscreen: this.navigationVisible
+    }
+  },
+  mounted () {
+    this.setIsFullscreen(this.isFullscreen)
+  },
+  watch: {
+    isFullscreen (value) {
+      this.setIsFullscreen(value)
+      if (value) {
+        this.navigationVisibleBeforeFullscreen = this.navigationVisible
+        this.setNavigationVisible(false)
+      } else {
+        this.navigationVisible = this.navigationVisibleBeforeFullscreen
+      }
+    }
+  },
   computed: {
     navigationVisible: {
       get () {
@@ -41,10 +60,16 @@ export default {
         this.setNavigationVisible(value || false)
       }
     },
+    isFullscreen () {
+      return this.$fullscreen.isFullscreen
+    },
     ...mapState(['previewVisible'])
   },
   methods: {
-    ...mapActions(['setNavigationVisible'])
+    ...mapActions([
+      'setNavigationVisible',
+      'setIsFullscreen'
+    ])
   }
 }
 </script>

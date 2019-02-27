@@ -4,7 +4,8 @@
       <panel-toolbar-toggle
         v-model="navigationVisible"
         icon="mdi-file-tree" />
-      <panel-toolbar-button
+      <panel-toolbar-toggle
+        v-model="fullscreen"
         icon="mdi-fullscreen" />
       <panel-toolbar-divider />
       <panel-toolbar-button
@@ -56,6 +57,18 @@ export default {
       },
       set (value) {
         this.setPreviewVisible(value)
+      }
+    },
+    fullscreen: {
+      get () {
+        return this.$store.state.isFullscreen
+      },
+      set (value) {
+        if (value) {
+          this.$fullscreen.enterFullscreen()
+        } else {
+          this.$fullscreen.exitFullscreen()
+        }
       }
     }
   },
