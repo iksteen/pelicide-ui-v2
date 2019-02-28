@@ -7,12 +7,19 @@
       <panel-toolbar-toggle
         v-model="fullscreen"
         icon="mdi-fullscreen" />
+
       <panel-toolbar-divider />
+
       <panel-toolbar-button
         icon="mdi-content-save" />
       <panel-toolbar-button
         icon="mdi-wrench" />
+
+      <panel-toolbar-divider v-if="editorToolbar" />
+      <component v-bind:is="editorToolbar" />
+
       <v-spacer />
+
       <panel-toolbar-button
         icon="mdi-settings" />
       <panel-toolbar-toggle
@@ -47,7 +54,8 @@ export default {
   },
   data () {
     return {
-      editorComponent: this.$pelicide.editors[0]
+      editorComponent: this.$pelicide.editors[0],
+      editorToolbar: null
     }
   },
   computed: {
@@ -81,10 +89,27 @@ export default {
     }
   },
   methods: {
+    getEditorComponent () {
+      return this.editorComponent
+    },
+    setEditorToolbar (toolbar) {
+      this.editorToolbar = toolbar
+    },
     ...mapActions([
       'setNavigationVisible',
       'setPreviewVisible'
     ])
+  },
+  watch: {
+    editorComponent () {
+      this.editorToolbar = null
+    }
+  },
+  provide () {
+    return {
+      getEditorComponent: this.getEditorComponent,
+      setEditorToolbar: this.setEditorToolbar
+    }
   }
 }
 </script>
