@@ -42,12 +42,8 @@ export default {
       navigationVisibleBeforeFullscreen: this.navigationVisible
     }
   },
-  mounted () {
-    this.setIsFullscreen(this.isFullscreen)
-  },
   watch: {
-    isFullscreen (value) {
-      this.setIsFullscreen(value)
+    '$fs.fullscreen' (value) {
       if (value) {
         this.navigationVisibleBeforeFullscreen = this.navigationVisible
         this.setNavigationVisible(false)
@@ -65,15 +61,11 @@ export default {
         this.setNavigationVisible(value || false)
       }
     },
-    isFullscreen () {
-      return this.$fullscreen.isFullscreen
-    },
     ...mapState(['previewVisible'])
   },
   methods: {
     ...mapActions([
-      'setNavigationVisible',
-      'setIsFullscreen'
+      'setNavigationVisible'
     ])
   }
 }

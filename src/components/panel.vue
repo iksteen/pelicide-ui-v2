@@ -1,6 +1,6 @@
 <template>
   <div class="fill-height">
-    <panel-toolbar v-if="!isFullscreen">
+    <panel-toolbar v-if="!$fs.fullscreen">
       <slot name="toolbar" />
     </panel-toolbar>
     <slot />
@@ -9,14 +9,10 @@
 
 <script>
 import PanelToolbar from './panel-toolbar'
-import { mapState } from 'vuex'
 
 export default {
   components: {
     PanelToolbar
-  },
-  computed: {
-    ...mapState(['isFullscreen'])
   }
 }
 </script>

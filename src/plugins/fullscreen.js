@@ -5,7 +5,21 @@ export default {
     const fs = new Vue({
       data () {
         return {
-          isFullscreen: this.getIsFullscreen()
+          fullscreen_: this.getIsFullscreen()
+        }
+      },
+      computed: {
+        fullscreen: {
+          get () {
+            return this.fullscreen_
+          },
+          set (val) {
+            if (val) {
+              this.enterFullscreen()
+            } else {
+              this.exitFullscreen()
+            }
+          }
         }
       },
       methods: {
@@ -47,14 +61,11 @@ export default {
           if (exitFullscreen !== null) {
             exitFullscreen.apply(document)
           }
-        },
-        toggleFullscreen () {
-          return (!this.isFullscreen) ? this.enterFullscreen() : this.exitFullscreen()
         }
       }
     })
 
-    vue.prototype.$fullscreen = fs;
+    vue.prototype.$fs = fs;
 
     [
       'fullscreenchange',
@@ -63,7 +74,7 @@ export default {
       'msfullscreenchange'
     ].forEach(eventName => {
       document.addEventListener(eventName, function () {
-        fs.isFullscreen = fs.getIsFullscreen()
+        fs.fullscreen_ = fs.getIsFullscreen()
       }, false)
     })
   }
