@@ -7,12 +7,9 @@
 
   .vue-codemirror
     @extend .cm-s-pelicide-background
-    display flex
     height 100%
-    overflow auto
 
   .CodeMirror
-    flex 1
     height: inherit
 </style>
 
