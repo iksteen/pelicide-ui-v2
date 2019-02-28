@@ -1,12 +1,14 @@
+@import "../../assets/stylus/_variables.styl"
+
 .cm-s-pelicide-background
-  background #002240
+  background $editor-background
 
 .cm-s-pelicide
   &.CodeMirror
     @extend .cm-s-pelicide-background
     padding: 0.5em
-    color #ccc
-    font-family Inconsolata, monospace
+    color $editor-color
+    font-family $editor-font-family
 
     ::selection
       background rgba(179, 101, 57, .99)
