@@ -19,7 +19,6 @@ import 'codemirror/lib/codemirror.css'
 import { mapState } from 'vuex'
 
 export default {
-  props: ['options'],
   components: {
     codemirror
   },
@@ -28,6 +27,9 @@ export default {
       cmOptions: {
         theme: 'pelicide',
         lineWrapping: true,
+        extraKeys: {
+          ...this.keymap()
+        },
         ...this.editorOptions()
       },
       cm: null
@@ -45,6 +47,9 @@ export default {
   },
   methods: {
     editorOptions () {
+      return {}
+    },
+    keymap () {
       return {}
     },
     cmReady (cm) {
