@@ -7,7 +7,7 @@
     <v-content>
       <v-container fluid pa-0 fill-height>
         <v-layout row>
-          <v-flex>
+          <v-flex v-bind:class="{ xs6: previewVisible }">
             <editor-panel />
           </v-flex>
 
@@ -19,6 +19,11 @@
     </v-content>
   </v-app>
 </template>
+
+<style lang="stylus" scoped>
+  .container
+    position absolute
+</style>
 
 <script>
 import NavigationPanel from './components/navigation-panel'

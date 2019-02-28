@@ -1,0 +1,61 @@
+<template>
+  <codemirror ref="cm" :options="cmOptions" @ready="cmReady" v-resize="onResize" />
+</template>
+
+<style lang="stylus">
+  @import './codemirror-theme.styl'
+
+  .vue-codemirror
+    @extend .cm-s-pelicide-background
+    display flex
+    height 100%
+    overflow auto
+
+  .CodeMirror
+    flex 1
+    height: inherit
+</style>
+
+<script>
+import { codemirror } from 'vue-codemirror'
+import 'codemirror/lib/codemirror.css'
+import { mapState } from 'vuex'
+
+export default {
+  props: ['options'],
+  components: {
+    codemirror
+  },
+  data () {
+    return {
+      cmOptions: {
+        theme: 'pelicide',
+        lineWrapping: true,
+        ...this.editorOptions()
+      },
+      cm: null
+    }
+  },
+  computed: {
+    ...mapState([
+      'previewVisible'
+    ])
+  },
+  watch: {
+    previewVisible () {
+      this.onResize()
+    }
+  },
+  methods: {
+    editorOptions () {
+      return {}
+    },
+    cmReady (cm) {
+      this.cm = cm
+    },
+    onResize () {
+      this.cm && this.cm.refresh()
+    }
+  }
+}
+</script>

@@ -1,0 +1,94 @@
+.cm-s-pelicide-background
+  background #002240
+
+.cm-s-pelicide
+  &.CodeMirror
+    @extend .cm-s-pelicide-background
+    padding: 0.5em
+    color #ccc
+    font-family Inconsolata, monospace
+
+    ::selection
+      background rgba(179, 101, 57, .99)
+
+  .CodeMirror
+    &-selected
+      background #b36539 !important
+
+    &-gutters
+      background #002240
+      border-right 1px solid #aaa
+
+    &-guttermarker
+      color #ffee80
+
+    &-guttermarker-subtle
+      color: #d0d0d0
+
+    &-linenumber
+      color: #d0d0d0
+
+    &-cursor
+      border-left 1px solid white !important
+
+    &-activeline-background
+      background #002D57 !important
+
+    &-matchingbracket
+      outline 1px solid grey
+      color white !important
+
+  .cm
+    &-comment
+      color #08f
+
+    &-atom
+      color #845dc4
+
+    &-number, &-attribute
+      color #ff80e1
+
+    &-keyword
+      color #ffee80
+
+    &-string
+      color #3ad900
+
+    &-meta
+      color #ff9d00
+
+    &-variable-2, &-tag
+      color #9effff
+
+    &-variable-3, &-def
+      color white
+
+    &-bracket
+      color #d8d8d8
+
+    &-builtin, &-special
+      color #ff9e59
+
+    &-link
+      color #845dc4
+
+    &-error
+      color #9d1e15
+
+    &-header-1
+      font-size xx-large
+
+    &-header-2
+      font-size x-large
+
+    &-header-3
+      font-size large
+
+    &-header-4
+      font-size medium
+
+    &-header-5
+      font-size small
+
+    &-header-6
+      font-size smaller

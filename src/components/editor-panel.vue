@@ -19,14 +19,12 @@
         v-model="previewVisible"
         icon="mdi-television" />
     </template>
-    EDITOR
+
+    <div class="fill-height" style="padding-bottom: 32px">
+      <component v-bind:is="editorComponent"></component>
+    </div>
   </panel>
 </template>
-
-<style scoped lang="stylus">
-  .editor
-    background #002240
-</style>
 
 <script>
 import Panel from './panel'
@@ -41,6 +39,11 @@ export default {
     PanelToolbarButton,
     PanelToolbarToggle,
     PanelToolbarDivider
+  },
+  data () {
+    return {
+      editorComponent: this.$pelicide.editors[0]
+    }
   },
   computed: {
     navigationVisible: {
