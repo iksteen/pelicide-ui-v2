@@ -10,8 +10,11 @@ import App from './app.vue'
 import router from './router'
 import store from './store'
 
+import 'vuetify/src/stylus/app.styl'
 import './assets/stylus/main.styl'
+
 import 'roboto-fontface/css/roboto/roboto-fontface.css'
+import 'typeface-roboto-mono'
 import '@mdi/font/css/materialdesignicons.css'
 
 Vue.use(Vuetify, {
