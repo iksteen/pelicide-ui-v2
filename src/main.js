@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify/lib'
+import PerfectScrollbar from 'vue2-perfect-scrollbar'
 
 import Fullscreen from './plugins/fullscreen'
 
@@ -13,6 +14,7 @@ import store from './store'
 import 'vuetify/src/stylus/app.styl'
 import './assets/stylus/main.styl'
 
+import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css'
 import 'roboto-fontface/css/roboto/roboto-fontface.css'
 import 'typeface-roboto-mono'
 import '@mdi/font/css/materialdesignicons.css'
@@ -20,6 +22,7 @@ import '@mdi/font/css/materialdesignicons.css'
 Vue.use(Vuetify, {
   iconfont: 'mdi'
 })
+Vue.use(PerfectScrollbar)
 Vue.use(Fullscreen)
 
 // Register editor factory and editors

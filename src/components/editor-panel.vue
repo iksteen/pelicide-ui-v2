@@ -4,23 +4,28 @@
       <panel-toolbar-toggle
         v-model="navigationVisible"
         icon="mdi-file-tree" />
-      <panel-toolbar-toggle
-        v-model="$fs.fullscreen"
-        icon="mdi-fullscreen" />
 
-      <panel-toolbar-divider />
+      <perfect-scrollbar>
+        <v-toolbar-items>
 
-      <panel-toolbar-button
-        icon="mdi-content-save" />
-      <panel-toolbar-button
-        icon="mdi-wrench" />
+          <panel-toolbar-toggle
+            v-model="$fs.fullscreen"
+            icon="mdi-fullscreen" />
 
-      <panel-toolbar-divider
-        v-if="editorToolbar"
-        class="hidden-sm-and-down" />
-      <component
-        v-bind:is="editorToolbar"
-        class="hidden-sm-and-down" />
+          <panel-toolbar-divider />
+
+          <panel-toolbar-button
+            icon="mdi-content-save" />
+          <panel-toolbar-button
+            icon="mdi-wrench" />
+
+          <panel-toolbar-divider
+            v-if="editorToolbar" />
+          <component
+            v-bind:is="editorToolbar" />
+
+        </v-toolbar-items>
+      </perfect-scrollbar>
 
       <v-spacer />
 
