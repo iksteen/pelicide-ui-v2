@@ -1,4 +1,3 @@
-<script>
 import CodeMirrorBase from '../codemirror-base'
 import 'codemirror/mode/markdown/markdown'
 import MarkdownToolbar from './markdown-toolbar'
@@ -18,4 +17,3 @@ export default {
     }
   }
 }
-</script>
