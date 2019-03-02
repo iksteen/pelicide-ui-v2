@@ -1,5 +1,8 @@
 <template>
-  <codemirror ref="cm" :options="cmOptions" @ready="cmReady" v-resize="onResize" />
+  <div>
+    <resize-observer class="observer" @notify="onResize" />
+    <codemirror ref="cm" :options="cmOptions" @ready="cmReady" />
+  </div>
 </template>
 
 <style lang="stylus">
@@ -14,13 +17,20 @@
     width 100%
 </style>
 
+<style lang="stylus" scoped>
+  observer
+    position relative
+</style>
+
 <script>
+import 'vue-resize/dist/vue-resize.css'
+import { ResizeObserver } from 'vue-resize'
 import { codemirror } from 'vue-codemirror'
 import 'codemirror/lib/codemirror.css'
-import { mapState } from 'vuex'
 
 export default {
   components: {
+    ResizeObserver,
     codemirror
   },
   data () {
@@ -34,16 +44,6 @@ export default {
         ...this.editorOptions()
       },
       cm: null
-    }
-  },
-  computed: {
-    ...mapState([
-      'previewVisible'
-    ])
-  },
-  watch: {
-    previewVisible () {
-      this.onResize()
     }
   },
   methods: {
