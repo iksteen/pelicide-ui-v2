@@ -15,16 +15,25 @@
       <panel-toolbar-button
         icon="mdi-wrench" />
 
-      <panel-toolbar-divider v-if="editorToolbar" />
-      <component v-bind:is="editorToolbar" />
+      <panel-toolbar-divider
+        v-if="editorToolbar"
+        class="hidden-sm-and-down" />
+      <component
+        v-bind:is="editorToolbar"
+        class="hidden-sm-and-down" />
 
       <v-spacer />
 
       <panel-toolbar-button
         icon="mdi-settings" />
+      <panel-toolbar-button
+        class="hidden-md-and-up"
+        @click="setPreviewVisible(true)"
+        icon="mdi-eye-outline" />
       <panel-toolbar-toggle
+        class="hidden-sm-and-down"
         v-model="previewVisible"
-        icon="mdi-television" />
+        icon="mdi-eye-outline" />
     </template>
 
     <component v-bind:is="editorComponent" />

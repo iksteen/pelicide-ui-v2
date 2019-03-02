@@ -1,6 +1,10 @@
 <template>
   <panel class="preview">
     <template v-slot:toolbar>
+      <panel-toolbar-button
+        class="hidden-md-and-up"
+        icon="mdi-pencil"
+        @click="setPreviewVisible(false)" />
       <panel-toolbar-options
         v-model="mode"
         :options="modes" />
@@ -19,6 +23,7 @@ import Panel from './panel'
 import PanelToolbarButton from './panel-toolbar-button'
 import PanelToolbarDivider from './panel-toolbar-divider'
 import PanelToolbarOptions from './panel-toolbar-options'
+import { mapActions } from 'vuex'
 
 export default {
   components: {
@@ -41,6 +46,11 @@ export default {
         }
       ]
     }
+  },
+  methods: {
+    ...mapActions([
+      'setPreviewVisible'
+    ])
   }
 }
 </script>

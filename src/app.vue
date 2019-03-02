@@ -7,10 +7,15 @@
     <v-content>
       <v-container fluid pa-0 fill-height>
         <v-layout>
-          <editor-panel />
+          <transition name="flexhide">
+            <editor-panel
+              v-show="editorVisible" />
+          </transition>
 
           <transition name="flexhide">
-            <preview-panel v-if="previewVisible" class="flex xs6" />
+            <preview-panel
+              v-show="previewVisible"
+              class="flex xs12 md6" />
           </transition>
         </v-layout>
       </v-container>
@@ -53,6 +58,9 @@ export default {
       set (value) {
         this.setNavigationVisible(value || false)
       }
+    },
+    editorVisible () {
+      return this.$vuetify.breakpoint.mdAndUp || !this.previewVisible
     },
     ...mapState(['previewVisible'])
   },
