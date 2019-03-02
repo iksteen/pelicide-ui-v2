@@ -7,10 +7,11 @@
 
   .vue-codemirror
     @extend .cm-s-pelicide-background
-    height 100%
 
   .CodeMirror
-    height: inherit
+    position absolute
+    height 100%
+    width 100%
 </style>
 
 <script>

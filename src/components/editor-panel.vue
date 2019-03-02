@@ -27,16 +27,9 @@
         icon="mdi-television" />
     </template>
 
-    <div class="fill-height padding-helper">
-      <component v-bind:is="editorComponent" />
-    </div>
+    <component v-bind:is="editorComponent" />
   </panel>
 </template>
-
-<style lang="stylus" scoped>
-  .padding-helper
-    padding-bottom 32px
-</style>
 
 <script>
 import Panel from './panel'
