@@ -28,8 +28,13 @@ Vue.use(MarkdownEditor)
 
 Vue.config.productionTip = false
 
-new Vue({
+const app = new Vue({
   router,
   store,
   render: h => h(App)
-}).$mount('#app')
+})
+app.$store.dispatch(
+  'setPreviewVisible',
+  app.$vuetify.breakpoint.mdAndUp
+)
+app.$mount('#app')
