@@ -8,7 +8,10 @@
       <v-container fluid pa-0 fill-height>
         <v-layout>
           <editor-panel />
-          <preview-panel v-if="previewVisible" class="flex xs6" />
+
+          <transition name="flexhide">
+            <preview-panel v-if="previewVisible" class="flex xs6" />
+          </transition>
         </v-layout>
       </v-container>
     </v-content>
