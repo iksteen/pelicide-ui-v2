@@ -1,12 +1,14 @@
 <template>
   <v-btn-toggle v-model="val" class="transparent">
-    <v-btn icon small :value="true" class="mx-1">
-      <v-icon small>{{ icon }}</v-icon>
+    <v-btn icon :small="small" :value="true" class="mx-1">
+      <v-icon :small="small">{{ icon }}</v-icon>
     </v-btn>
   </v-btn-toggle>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   props: ['value', 'icon'],
   computed: {
@@ -17,7 +19,11 @@ export default {
       set (value) {
         this.$emit('input', value || false)
       }
-    }
+    },
+    small () {
+      return this.toolbarStyle === 'tiny'
+    },
+    ...mapState(['toolbarStyle'])
   }
 }
 </script>

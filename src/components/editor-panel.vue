@@ -30,6 +30,7 @@
       <v-spacer />
 
       <panel-toolbar-button
+        @click="onChangeToolbarStyle"
         icon="mdi-settings" />
       <panel-toolbar-button
         class="hidden-md-and-up"
@@ -50,7 +51,7 @@ import Panel from './panel'
 import PanelToolbarButton from './panel-toolbar-button'
 import PanelToolbarToggle from './panel-toolbar-toggle'
 import PanelToolbarDivider from './panel-toolbar-divider'
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   components: {
@@ -81,7 +82,8 @@ export default {
       set (value) {
         this.setPreviewVisible(value)
       }
-    }
+    },
+    ...mapState(['toolbarStyle'])
   },
   methods: {
     getEditorComponent () {
@@ -90,9 +92,16 @@ export default {
     setEditorToolbar (toolbar) {
       this.editorToolbar = toolbar
     },
+    onChangeToolbarStyle () {
+      this.setToolbarStyle({
+        'normal': 'small',
+        'small': 'tiny'
+      }[this.toolbarStyle] || 'normal')
+    },
     ...mapActions([
       'setNavigationVisible',
-      'setPreviewVisible'
+      'setPreviewVisible',
+      'setToolbarStyle'
     ])
   },
   watch: {
