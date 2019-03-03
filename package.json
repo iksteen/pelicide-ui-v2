@@ -13,6 +13,7 @@
     "typeface-roboto-mono": "^0.0.54",
     "vue": "^2.6.6",
     "vue-codemirror": "^4.0.6",
+    "vue-native-websocket": "^2.0.12",
     "vue-resize": "^0.4.5",
     "vue-router": "^3.0.1",
     "vue2-perfect-scrollbar": "^1.2.0",

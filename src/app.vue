@@ -19,6 +19,7 @@
           </transition>
         </v-layout>
       </v-container>
+      <connecting-dialog :loading="!$api.ready" />
     </v-content>
   </v-app>
 </template>
@@ -28,9 +29,11 @@ import NavigationPanel from './components/navigation-panel'
 import EditorPanel from './components/editor-panel'
 import PreviewPanel from './components/preview-panel'
 import { mapActions, mapState } from 'vuex'
+import ConnectingDialog from './components/loading-dialog'
 
 export default {
   components: {
+    ConnectingDialog,
     NavigationPanel,
     EditorPanel,
     PreviewPanel

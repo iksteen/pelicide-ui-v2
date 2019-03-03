@@ -10,6 +10,7 @@ import MarkdownEditor from './plugins/editors/markdown'
 import App from './app.vue'
 import router from './router'
 import store from './store'
+import Api from './api'
 
 import 'vuetify/src/stylus/app.styl'
 import './assets/stylus/main.styl'
@@ -28,6 +29,9 @@ Vue.use(Fullscreen)
 // Register editor factory and editors
 Vue.use(EditorRegistry)
 Vue.use(MarkdownEditor)
+
+// Connect websocket
+Vue.use(Api, { store })
 
 Vue.config.productionTip = false
 

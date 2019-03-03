@@ -3,16 +3,32 @@ import Vuex from 'vuex'
 import {
   SET_NAVIGATION_VISIBLE,
   SET_PREVIEW_VISIBLE,
-  SET_TOOLBAR_STYLE
+  SET_TOOLBAR_STYLE,
+  SET_SITES,
+  SET_CURRENT_SITE_ID,
+  SET_SITE_FILES
 } from './mutation-types'
 
 Vue.use(Vuex)
+
+const EMPTY_FILES = { content: [], theme: [] }
 
 export default new Vuex.Store({
   state: {
     navigationVisible: true,
     previewVisible: true,
-    toolbarStyle: localStorage.getItem('toolbar-style') || 'normal'
+    toolbarStyle: localStorage.getItem('toolbar-style') || 'dense',
+    sites: [],
+    currentSiteId: null,
+    siteFiles: EMPTY_FILES
+  },
+  getters: {
+    sitesById (state) {
+      return state.sites.reduce((acc, site) => {
+        acc[site.id] = site
+        return acc
+      }, {})
+    }
   },
   mutations: {
     [SET_NAVIGATION_VISIBLE] (state, value) {
@@ -23,6 +39,16 @@ export default new Vuex.Store({
     },
     [SET_TOOLBAR_STYLE] (state, value) {
       state.toolbarStyle = value
+    },
+    [SET_SITES] (state, value) {
+      state.sites = value
+    },
+    [SET_CURRENT_SITE_ID] (state, value) {
+      state.currentSiteId = value
+      state.siteFiles = EMPTY_FILES
+    },
+    [SET_SITE_FILES] (state, value) {
+      state.siteFiles = value
     }
   },
   actions: {
@@ -35,6 +61,18 @@ export default new Vuex.Store({
     setToolbarStyle ({ commit }, value) {
       localStorage.setItem('toolbar-style', value)
       commit(SET_TOOLBAR_STYLE, value)
+    },
+    setSites ({ commit, getters, state }, value) {
+      commit(SET_SITES, value)
+      if (getters.sitesById[state.currentSiteId] === undefined) {
+        commit(SET_CURRENT_SITE_ID, null)
+      }
+    },
+    setCurrentSiteId ({ commit }, value) {
+      commit(SET_CURRENT_SITE_ID, value)
+    },
+    setSiteFiles ({ commit }, value) {
+      commit(SET_SITE_FILES, value)
     }
   }
 })
