@@ -6,6 +6,8 @@
       <panel-toolbar-button icon="mdi-cloud-upload" />
       <panel-toolbar-divider />
       <panel-toolbar-button icon="mdi-file-plus" />
+      <v-spacer />
+      <panel-toolbar-button icon="mdi-web" />
     </template>
   </panel>
 </template>
