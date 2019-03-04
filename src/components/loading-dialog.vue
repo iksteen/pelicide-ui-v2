@@ -15,14 +15,17 @@
           indeterminate
           :size="70"
           :width="7"
-          color="#b36539" />
+          color="#b36539"
+        />
       </v-layout>
     </v-container>
   </v-dialog>
 </template>
 
 <script>
-export default {
-  props: ['loading']
-}
+  export default {
+    props: {
+      loading: Boolean
+    }
+  }
 </script>

@@ -1,7 +1,14 @@
 <template>
   <div>
-    <resize-observer class="observer" @notify="onResize" />
-    <codemirror ref="cm" :options="cmOptions" @ready="cmReady" />
+    <resize-observer
+      class="observer"
+      @notify="onResize"
+    />
+    <codemirror
+      ref="cm"
+      :options="cmOptions"
+      @ready="cmReady"
+    />
   </div>
 </template>
 
@@ -23,42 +30,42 @@
 </style>
 
 <script>
-import 'vue-resize/dist/vue-resize.css'
-import { ResizeObserver } from 'vue-resize'
-import { codemirror } from 'vue-codemirror'
-import 'codemirror/lib/codemirror.css'
+  import 'vue-resize/dist/vue-resize.css'
+  import { ResizeObserver } from 'vue-resize'
+  import { codemirror } from 'vue-codemirror'
+  import 'codemirror/lib/codemirror.css'
 
-export default {
-  components: {
-    ResizeObserver,
-    codemirror
-  },
-  data () {
-    return {
-      cmOptions: {
-        theme: 'pelicide',
-        lineWrapping: true,
-        extraKeys: {
-          ...this.keymap()
+  export default {
+    components: {
+      ResizeObserver,
+      codemirror
+    },
+    data () {
+      return {
+        cmOptions: {
+          theme: 'pelicide',
+          lineWrapping: true,
+          extraKeys: {
+            ...this.keymap()
+          },
+          ...this.editorOptions()
         },
-        ...this.editorOptions()
+        cm: null
+      }
+    },
+    methods: {
+      editorOptions () {
+        return {}
       },
-      cm: null
-    }
-  },
-  methods: {
-    editorOptions () {
-      return {}
-    },
-    keymap () {
-      return {}
-    },
-    cmReady (cm) {
-      this.cm = cm
-    },
-    onResize () {
-      this.cm && this.cm.refresh()
+      keymap () {
+        return {}
+      },
+      cmReady (cm) {
+        this.cm = cm
+      },
+      onResize () {
+        this.cm && this.cm.refresh()
+      }
     }
   }
-}
 </script>

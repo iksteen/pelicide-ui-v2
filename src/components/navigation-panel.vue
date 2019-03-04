@@ -13,15 +13,15 @@
 </template>
 
 <script>
-import Panel from './panel'
-import PanelToolbarButton from './panel-toolbar-button'
-import PanelToolbarDivider from './panel-toolbar-divider'
+  import Panel from './panel'
+  import PanelToolbarButton from './panel-toolbar-button'
+  import PanelToolbarDivider from './panel-toolbar-divider'
 
-export default {
-  components: {
-    Panel,
-    PanelToolbarButton,
-    PanelToolbarDivider
+  export default {
+    components: {
+      Panel,
+      PanelToolbarButton,
+      PanelToolbarDivider
+    }
   }
-}
 </script>

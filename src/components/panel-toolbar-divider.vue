@@ -1,3 +1,6 @@
 <template>
-  <v-divider vertical class="mx-2" />
+  <v-divider
+    vertical
+    class="mx-2"
+  />
 </template>

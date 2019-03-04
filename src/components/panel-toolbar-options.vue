@@ -1,7 +1,16 @@
 <template>
-  <v-btn-toggle v-model="val" class="transparent mx-1" :mandatory="mandatory">
+  <v-btn-toggle
+    v-model="val"
+    class="transparent mx-1"
+    :mandatory="mandatory"
+  >
     <template v-for="option in options">
-      <v-btn :key="option.value" flat :small="small" :value="option.value">
+      <v-btn
+        :key="option.value"
+        flat
+        :small="small"
+        :value="option.value"
+      >
         {{ option.label }}
       </v-btn>
     </template>
@@ -9,23 +18,36 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+  import { mapState } from 'vuex'
 
-export default {
-  props: ['options', 'value', 'mandatory'],
-  computed: {
-    val: {
-      get () {
-        return this.value
+  export default {
+    props: {
+      options: {
+        type: Array,
+        default: () => []
       },
-      set (value) {
-        this.$emit('input', value)
+      value: {
+        type: String,
+        default: ''
+      },
+      mandatory: {
+        type: Boolean,
+        default: false
       }
     },
-    small () {
-      return this.toolbarStyle === 'tiny'
-    },
-    ...mapState(['toolbarStyle'])
+    computed: {
+      val: {
+        get () {
+          return this.value
+        },
+        set (value) {
+          this.$emit('input', value)
+        }
+      },
+      small () {
+        return this.toolbarStyle === 'tiny'
+      },
+      ...mapState(['toolbarStyle'])
+    }
   }
-}
 </script>

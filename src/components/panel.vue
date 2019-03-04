@@ -4,7 +4,10 @@
       <slot name="toolbar" />
     </panel-toolbar>
 
-    <v-layout column content-layout>
+    <v-layout
+      column
+      content-layout
+    >
       <slot />
     </v-layout>
   </v-layout>
@@ -17,11 +20,11 @@
 </style>
 
 <script>
-import PanelToolbar from './panel-toolbar'
+  import PanelToolbar from './panel-toolbar'
 
-export default {
-  components: {
-    PanelToolbar
+  export default {
+    components: {
+      PanelToolbar
+    }
   }
-}
 </script>

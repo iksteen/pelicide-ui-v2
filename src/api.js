@@ -29,6 +29,23 @@ export default {
         ...mapGetters(['sitesById']),
         ...mapState(['sites', 'currentSiteId'])
       },
+      watch: {
+        sites (sites) {
+          if (this.currentSiteId === null) {
+            this.autoSelectSite()
+          }
+        },
+        currentSiteId (siteId) {
+          if (siteId === null) {
+            this.autoSelectSite()
+            return
+          }
+          this.listSiteFiles(siteId).then(files => {
+            this.setSiteFiles(files)
+            this.ready = true
+          })
+        }
+      },
       methods: {
         invoke (method, params = null) {
           return new Promise((resolve, reject) => {
@@ -55,23 +72,6 @@ export default {
           }
         },
         ...mapActions(['setSites', 'setCurrentSiteId', 'setSiteFiles'])
-      },
-      watch: {
-        sites (sites) {
-          if (this.currentSiteId === null) {
-            this.autoSelectSite()
-          }
-        },
-        currentSiteId (siteId) {
-          if (siteId === null) {
-            this.autoSelectSite()
-            return
-          }
-          this.listSiteFiles(siteId).then(files => {
-            this.setSiteFiles(files)
-            this.ready = true
-          })
-        }
       },
       sockets: {
         onopen () {
