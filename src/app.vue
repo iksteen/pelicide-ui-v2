@@ -7,7 +7,7 @@
       <navigation-panel />
     </v-navigation-drawer>
 
-    <v-content>
+    <v-content class="fill-height">
       <v-container
         fluid
         pa-0
