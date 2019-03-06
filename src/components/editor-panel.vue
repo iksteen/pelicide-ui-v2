@@ -17,6 +17,7 @@
 
           <panel-toolbar-button
             icon="mdi-content-save"
+            :disabled="!changed"
           />
           <panel-toolbar-button
             icon="mdi-wrench"
@@ -84,12 +85,16 @@
     data () {
       return {
         content: null,
+        originalContent: null,
         errorMessage: null,
         editorComponent: null,
         editorToolbar: null
       }
     },
     computed: {
+      changed () {
+        return this.content !== this.originalContent
+      },
       error: {
         get () {
           return this.errorMessage !== null
@@ -143,7 +148,7 @@
       open (item) {
         this.setEditorItem(null)
         this.editorComponent = null
-        this.content = ''
+        this.content = this.originalContent = null
 
         if (item === null) {
           return
@@ -167,7 +172,7 @@
             this.$nextTick()
           ])
             .then(([{ content }]) => {
-              this.content = content
+              this.content = this.originalContent = content
               this.setEditorItem(item)
             })
             .catch(({ message }) => {
