@@ -1,6 +1,7 @@
 <template>
   <v-btn
     :small="small"
+    :disabled="disabled"
     icon
     class="mx-1"
     @click="click"
@@ -19,6 +20,10 @@
       icon: {
         type: String,
         default: ''
+      },
+      disabled: {
+        type: Boolean,
+        default: false
       }
     },
     computed: {
