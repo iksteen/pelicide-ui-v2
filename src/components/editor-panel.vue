@@ -124,6 +124,8 @@
     watch: {
       editorComponent () {
         this.editorToolbar = null
+        this.content = this.originalContent = null
+        this.error = null
       }
     },
     mounted () {
@@ -148,7 +150,6 @@
       open (item) {
         this.setEditorItem(null)
         this.editorComponent = null
-        this.content = this.originalContent = null
 
         if (item === null) {
           return
