@@ -18,6 +18,7 @@
           <panel-toolbar-button
             icon="mdi-content-save"
             :disabled="!changed"
+            @click="save"
           />
           <panel-toolbar-button
             icon="mdi-wrench"
@@ -204,6 +205,26 @@
               })
           })
         }
+      },
+      save () {
+        if (!this.changed || !this.editorItem) {
+          return
+        }
+        const { siteId, anchor, path, name } = this.editorItem
+        const content = this.content
+        this.$api.putFileContent(
+          siteId,
+          anchor,
+          path,
+          name,
+          content
+        )
+          .then(() => {
+            this.originalContent = content
+          })
+          .catch(({ message }) => {
+            this.error = `Failed to save ${name}: ${message}`
+          })
       },
       ...mapActions([
         'setNavigationVisible',

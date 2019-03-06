@@ -79,6 +79,15 @@ export default {
             name
           })
         },
+        putFileContent (siteId, anchor, path, name, content) {
+          return this.invoke('put_file_content', {
+            site_id: siteId,
+            anchor,
+            path,
+            name,
+            content
+          })
+        },
         ...mapActions(['setSites', 'setCurrentSiteId', 'setSiteFiles'])
       },
       sockets: {
