@@ -69,7 +69,7 @@
     },
     data () {
       return {
-        editorComponent: this.$pelicide.editors[0],
+        editorComponent: this.$pelicide.editors['text/markdown'].component,
         editorToolbar: null
       }
     },

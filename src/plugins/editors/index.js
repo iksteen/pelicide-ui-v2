@@ -5,12 +5,17 @@ export default {
     vue.prototype.$pelicide = new Vue({
       data () {
         return {
-          editors: []
+          editors: {}
         }
       },
       methods: {
-        registerEditor (component) {
-          this.editors.push(component)
+        registerEditor (contentTypes, icon, component) {
+          contentTypes.forEach(contentType => {
+            this.editors[contentType] = {
+              icon,
+              component
+            }
+          })
         }
       }
     })

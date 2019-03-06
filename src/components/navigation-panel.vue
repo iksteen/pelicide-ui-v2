@@ -68,26 +68,6 @@
     }, root)
   }
 
-  function buildTree (nodeId, anchor, items, pathGetter) {
-    const nodes = []
-    const root = {
-      nodes,
-      leaves: {}
-    }
-
-    items.forEach(item => {
-      const path = pathGetter(item)
-      const leaf = getTreeNode(nodeId, root, path)
-      leaf.nodes.push({
-        id: nodeId(),
-        anchor,
-        icon: 'mdi-file-document-outline',
-        ...item
-      })
-    })
-    return nodes
-  }
-
   export default {
     components: {
       Panel,
@@ -110,7 +90,7 @@
             root: true,
             name: 'Draft articles',
             icon: 'mdi-folder',
-            children: buildTree(
+            children: this.buildTree(
               () => nodeId++,
               'content',
               this.siteFiles.content.filter(
@@ -127,7 +107,7 @@
             root: true,
             name: 'Published articles',
             icon: 'mdi-folder',
-            children: buildTree(
+            children: this.buildTree(
               () => nodeId++,
               'content',
               this.siteFiles.content.filter(
@@ -144,7 +124,7 @@
             root: true,
             name: 'Draft pages',
             icon: 'mdi-folder',
-            children: buildTree(
+            children: this.buildTree(
               () => nodeId++,
               'content',
               this.siteFiles.content.filter(
@@ -161,7 +141,7 @@
             root: true,
             name: 'Published pages',
             icon: 'mdi-folder',
-            children: buildTree(
+            children: this.buildTree(
               () => nodeId++,
               'content',
               this.siteFiles.content.filter(
@@ -177,7 +157,7 @@
             root: true,
             name: 'Other',
             icon: 'mdi-folder',
-            children: buildTree(
+            children: this.buildTree(
               () => nodeId++,
               'content',
               this.siteFiles.content.filter(
@@ -193,7 +173,7 @@
       },
       theme () {
         let nodeId = 0
-        return buildTree(
+        return this.buildTree(
           () => nodeId++,
           'theme',
           this.siteFiles.theme,
@@ -216,6 +196,27 @@
       ...mapGetters(['currentSite'])
     },
     methods: {
+      buildTree (nodeId, anchor, items, pathGetter) {
+        const nodes = []
+        const root = {
+          nodes,
+          leaves: {}
+        }
+
+        items.forEach(item => {
+          const path = pathGetter(item)
+          const leaf = getTreeNode(nodeId, root, path)
+          const editor = this.$pelicide.editors[item.mimetype]
+          const icon = editor ? editor.icon : 'mdi-file-cancel-outline'
+          leaf.nodes.push({
+            id: nodeId(),
+            anchor,
+            icon,
+            ...item
+          })
+        })
+        return nodes
+      },
       activate (item) {
         this.activeItem = item
       }
