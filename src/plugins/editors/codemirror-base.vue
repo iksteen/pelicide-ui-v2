@@ -6,8 +6,10 @@
     />
     <codemirror
       ref="cm"
+      :value="value"
       :options="cmOptions"
       @ready="cmReady"
+      @input="cmInput"
     />
   </div>
 </template>
@@ -40,6 +42,12 @@
       ResizeObserver,
       codemirror
     },
+    props: {
+      value: {
+        type: String,
+        default: ''
+      }
+    },
     data () {
       return {
         cmOptions: {
@@ -62,6 +70,9 @@
       },
       cmReady (cm) {
         this.cm = cm
+      },
+      cmInput (value) {
+        this.$emit('input', value)
       },
       onResize () {
         this.cm && this.cm.refresh()

@@ -6,7 +6,8 @@ import {
   SET_TOOLBAR_STYLE,
   SET_SITES,
   SET_CURRENT_SITE_ID,
-  SET_SITE_FILES
+  SET_SITE_FILES,
+  SET_EDITOR_ITEM
 } from './mutation-types'
 
 Vue.use(Vuex)
@@ -20,7 +21,8 @@ export default new Vuex.Store({
     toolbarStyle: localStorage.getItem('toolbar-style') || 'dense',
     sites: [],
     currentSiteId: null,
-    siteFiles: EMPTY_FILES
+    siteFiles: EMPTY_FILES,
+    editorItem: null
   },
   getters: {
     sitesById (state) {
@@ -52,6 +54,9 @@ export default new Vuex.Store({
     },
     [SET_SITE_FILES] (state, value) {
       state.siteFiles = value
+    },
+    [SET_EDITOR_ITEM] (state, value) {
+      state.editorItem = value
     }
   },
   actions: {
@@ -76,6 +81,9 @@ export default new Vuex.Store({
     },
     setSiteFiles ({ commit }, value) {
       commit(SET_SITE_FILES, value)
+    },
+    setEditorItem ({ commit }, value) {
+      commit(SET_EDITOR_ITEM, value)
     }
   }
 })

@@ -7,3 +7,5 @@ export const SET_TOOLBAR_STYLE = 'SET_TOOLBAR_STYLE'
 export const SET_SITES = 'SET_SITES'
 export const SET_CURRENT_SITE_ID = 'SET_CURRENT_SITE_ID'
 export const SET_SITE_FILES = 'SET_SITE_FILES'
+
+export const SET_EDITOR_ITEM = 'SET_EDITOR_ITEM'

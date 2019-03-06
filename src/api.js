@@ -71,6 +71,14 @@ export default {
             this.setCurrentSiteId(this.sites[0].id)
           }
         },
+        getFileContent (siteId, anchor, path, name) {
+          return this.invoke('get_file_content', {
+            site_id: siteId,
+            anchor,
+            path,
+            name
+          })
+        },
         ...mapActions(['setSites', 'setCurrentSiteId', 'setSiteFiles'])
       },
       sockets: {

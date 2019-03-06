@@ -49,7 +49,21 @@
       />
     </template>
 
-    <component :is="editorComponent" />
+    <div>
+      <v-alert
+        v-model="error"
+        dismissible
+        type="error"
+      >
+        {{ errorMessage }}
+      </v-alert>
+    </div>
+
+    <component
+      :is="editorComponent"
+      ref="editor"
+      v-model="content"
+    />
   </panel>
 </template>
 
@@ -69,11 +83,21 @@
     },
     data () {
       return {
-        editorComponent: this.$pelicide.editors['text/markdown'].component,
+        content: null,
+        errorMessage: null,
+        editorComponent: null,
         editorToolbar: null
       }
     },
     computed: {
+      error: {
+        get () {
+          return this.errorMessage !== null
+        },
+        set (val) {
+          this.errorMessage = val || null
+        }
+      },
       navigationVisible: {
         get () {
           return this.$store.state.navigationVisible
@@ -97,6 +121,12 @@
         this.editorToolbar = null
       }
     },
+    mounted () {
+      this.$pelicide.$on('open-in-editor', this.open)
+    },
+    destroyed () {
+      this.$pelicide.$off('open-in-editor', this.open)
+    },
     methods: {
       getEditorComponent () {
         return this.editorComponent
@@ -110,10 +140,46 @@
           'small': 'tiny'
         }[this.toolbarStyle] || 'normal')
       },
+      open (item) {
+        this.setEditorItem(null)
+        this.editorComponent = null
+        this.content = ''
+
+        if (item === null) {
+          return
+        }
+
+        const editor = this.$pelicide.editors[item.mimetype]
+        if (editor === undefined) {
+          this.error = `Could not find editor for ${item.mimetype}.`
+          return
+        }
+
+        this.editorComponent = editor.component
+        if (this.editorComponent) {
+          Promise.all([
+            this.$api.getFileContent(
+              item.siteId,
+              item.anchor,
+              item.path,
+              item.name
+            ),
+            this.$nextTick()
+          ])
+            .then(([{ content }]) => {
+              this.content = content
+              this.setEditorItem(item)
+            })
+            .catch(({ message }) => {
+              this.error = `Failed to load ${item.name}: ${message}.`
+            })
+        }
+      },
       ...mapActions([
         'setNavigationVisible',
         'setPreviewVisible',
-        'setToolbarStyle'
+        'setToolbarStyle',
+        'setEditorItem'
       ])
     },
     provide () {

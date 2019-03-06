@@ -182,17 +182,19 @@
       },
       activeContentItemId () {
         return (
-          this.activeItem &&
-          this.activeItem.anchor === 'content'
-        ) ? this.activeItem.id : null
+          this.editorItem &&
+          this.editorItem.siteId === this.currentSiteId &&
+          this.editorItem.anchor === 'content'
+        ) ? this.editorItem.id : null
       },
       activeThemeItemId () {
         return (
-          this.activeItem &&
-          this.activeItem.anchor === 'theme'
-        ) ? this.activeItem.id : null
+          this.editorItem &&
+          this.editorItem.siteId === this.currentSiteId &&
+          this.editorItem.anchor === 'theme'
+        ) ? this.editorItem.id : null
       },
-      ...mapState(['siteFiles']),
+      ...mapState(['siteFiles', 'currentSiteId', 'editorItem']),
       ...mapGetters(['currentSite'])
     },
     methods: {
@@ -210,6 +212,7 @@
           const icon = editor ? editor.icon : 'mdi-file-cancel-outline'
           leaf.nodes.push({
             id: nodeId(),
+            siteId: this.currentSiteId,
             anchor,
             icon,
             ...item
@@ -218,7 +221,9 @@
         return nodes
       },
       activate (item) {
-        this.activeItem = item
+        if (item) {
+          this.$pelicide.openInEditor(item)
+        }
       }
     }
   }

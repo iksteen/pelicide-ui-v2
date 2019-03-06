@@ -16,6 +16,9 @@ export default {
               component
             }
           })
+        },
+        openInEditor (item) {
+          this.$emit('open-in-editor', item)
         }
       }
     })
