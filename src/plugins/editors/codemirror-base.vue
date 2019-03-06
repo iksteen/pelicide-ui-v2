@@ -6,7 +6,7 @@
     />
     <codemirror
       ref="cm"
-      :value="value"
+      :value="value || ''"
       :options="cmOptions"
       @ready="cmReady"
       @input="cmInput"
