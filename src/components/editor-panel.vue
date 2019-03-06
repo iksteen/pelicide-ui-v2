@@ -119,7 +119,10 @@
           this.setPreviewVisible(value)
         }
       },
-      ...mapState(['toolbarStyle'])
+      ...mapState([
+        'toolbarStyle',
+        'editorItem'
+      ])
     },
     watch: {
       editorComponent (newComponent, oldComponent) {
@@ -165,23 +168,27 @@
         }
 
         this.editorComponent = editor.component
+
         if (this.editorComponent) {
-          Promise.all([
-            this.$api.getFileContent(
-              item.siteId,
-              item.anchor,
-              item.path,
-              item.name
-            ),
-            this.$nextTick()
-          ])
-            .then(([{ content }]) => {
-              this.content = this.originalContent = content
-              this.setEditorItem(item)
-            })
-            .catch(({ message }) => {
-              this.error = `Failed to load ${item.name}: ${message}.`
-            })
+          this.setEditorItem(item).then(() => {
+            Promise.all([
+              this.$api.getFileContent(
+                item.siteId,
+                item.anchor,
+                item.path,
+                item.name
+              ),
+              this.$nextTick()
+            ])
+              .then(([{ content }]) => {
+                if (this.editorItem === item) {
+                  this.content = this.originalContent = content
+                }
+              })
+              .catch(({ message }) => {
+                this.error = `Failed to load ${item.name}: ${message}.`
+              })
+          })
         }
       },
       ...mapActions([
