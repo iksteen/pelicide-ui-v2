@@ -122,8 +122,11 @@
       ...mapState(['toolbarStyle'])
     },
     watch: {
-      editorComponent () {
-        this.editorToolbar = null
+      editorComponent (newComponent, oldComponent) {
+        if (newComponent !== oldComponent) {
+          this.editorToolbar = null
+        }
+
         this.content = this.originalContent = null
         this.error = null
       }
