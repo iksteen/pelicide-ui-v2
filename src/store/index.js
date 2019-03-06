@@ -28,6 +28,9 @@ export default new Vuex.Store({
         acc[site.id] = site
         return acc
       }, {})
+    },
+    currentSite (state, getters) {
+      return state.currentSiteId && getters.sitesById[state.currentSiteId]
     }
   },
   mutations: {
