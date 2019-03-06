@@ -7,7 +7,8 @@ import {
   SET_SITES,
   SET_CURRENT_SITE_ID,
   SET_SITE_FILES,
-  SET_EDITOR_ITEM
+  SET_EDITOR_ITEM,
+  SET_EDITOR_CONTENT
 } from './mutation-types'
 
 Vue.use(Vuex)
@@ -22,7 +23,8 @@ export default new Vuex.Store({
     sites: [],
     currentSiteId: null,
     siteFiles: EMPTY_FILES,
-    editorItem: null
+    editorItem: null,
+    editorContent: null
   },
   getters: {
     sitesById (state) {
@@ -57,6 +59,9 @@ export default new Vuex.Store({
     },
     [SET_EDITOR_ITEM] (state, value) {
       state.editorItem = value
+    },
+    [SET_EDITOR_CONTENT] (state, value) {
+      state.editorContent = value
     }
   },
   actions: {
@@ -84,6 +89,9 @@ export default new Vuex.Store({
     },
     setEditorItem ({ commit }, value) {
       commit(SET_EDITOR_ITEM, value)
+    },
+    setEditorContent ({ commit }, value) {
+      commit(SET_EDITOR_CONTENT, value)
     }
   }
 })

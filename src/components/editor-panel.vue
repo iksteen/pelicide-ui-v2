@@ -99,7 +99,6 @@
     },
     data () {
       return {
-        content: null,
         originalContent: null,
         errorMessage: null,
         editorComponent: null,
@@ -107,6 +106,14 @@
       }
     },
     computed: {
+      content: {
+        get () {
+          return this.editorContent
+        },
+        set (value) {
+          this.setEditorContent(value)
+        }
+      },
       changed () {
         return this.content !== this.originalContent
       },
@@ -136,7 +143,8 @@
       },
       ...mapState([
         'toolbarStyle',
-        'editorItem'
+        'editorItem',
+        'editorContent'
       ])
     },
     watch: {
@@ -230,7 +238,8 @@
         'setNavigationVisible',
         'setPreviewVisible',
         'setToolbarStyle',
-        'setEditorItem'
+        'setEditorItem',
+        'setEditorContent'
       ])
     },
     provide () {
