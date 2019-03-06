@@ -68,6 +68,14 @@
   </panel>
 </template>
 
+<style lang="stylus" scoped>
+  @import "../assets/stylus/_variables.styl"
+
+  .editor
+    background-color $editor-background-color
+    color $editor-color
+</style>
+
 <script>
   import Panel from './panel'
   import PanelToolbarButton from './panel-toolbar-button'
