@@ -50,7 +50,7 @@
       />
     </template>
 
-    <div>
+    <div class="alert">
       <v-alert
         v-model="error"
         dismissible
@@ -74,6 +74,12 @@
   .editor
     background-color $editor-background-color
     color $editor-color
+
+  .alert
+    position absolute
+    width 90%
+    margin 0 5% 0 5%
+    z-index 2147483647
 </style>
 
 <script>
