@@ -12,7 +12,6 @@ import router from './router'
 import store from './store'
 import Api from './api'
 
-import 'vuetify/src/stylus/app.styl'
 import './assets/stylus/main.styl'
 
 import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css'
