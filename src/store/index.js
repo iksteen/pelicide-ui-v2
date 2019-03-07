@@ -4,6 +4,7 @@ import {
   SET_NAVIGATION_VISIBLE,
   SET_PREVIEW_VISIBLE,
   SET_TOOLBAR_STYLE,
+  SET_DARK_MODE,
   SET_SITES,
   SET_CURRENT_SITE_ID,
   SET_SITE_FILES,
@@ -21,6 +22,7 @@ export default new Vuex.Store({
     navigationVisible: true,
     previewVisible: true,
     toolbarStyle: localStorage.getItem('toolbar-style') || 'dense',
+    darkMode: JSON.parse(localStorage.getItem('dark-mode') || 'false'),
     sites: [],
     currentSiteId: null,
     siteFiles: EMPTY_FILES,
@@ -48,6 +50,9 @@ export default new Vuex.Store({
     },
     [SET_TOOLBAR_STYLE] (state, value) {
       state.toolbarStyle = value
+    },
+    [SET_DARK_MODE] (state, value) {
+      state.darkMode = value
     },
     [SET_SITES] (state, value) {
       state.sites = value
@@ -79,6 +84,10 @@ export default new Vuex.Store({
     setToolbarStyle ({ commit }, value) {
       localStorage.setItem('toolbar-style', value)
       commit(SET_TOOLBAR_STYLE, value)
+    },
+    setDarkMode ({ commit }, value) {
+      localStorage.setItem('dark-mode', JSON.stringify(value))
+      commit(SET_DARK_MODE, value)
     },
     setSites ({ commit, getters, state }, value) {
       commit(SET_SITES, value)

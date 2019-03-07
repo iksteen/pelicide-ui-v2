@@ -35,6 +35,11 @@
 
       <v-spacer />
 
+      <panel-toolbar-toggle
+        :value="darkMode"
+        icon="mdi-theme-light-dark"
+        @input="setDarkMode"
+      />
       <panel-toolbar-button
         icon="mdi-settings"
         @click="onChangeToolbarStyle"
@@ -144,7 +149,8 @@
       ...mapState([
         'toolbarStyle',
         'editorItem',
-        'editorContent'
+        'editorContent',
+        'darkMode'
       ])
     },
     watch: {
@@ -238,6 +244,7 @@
         'setNavigationVisible',
         'setPreviewVisible',
         'setToolbarStyle',
+        'setDarkMode',
         'setEditorItem',
         'setEditorContent',
         'setEditorScrollFraction'

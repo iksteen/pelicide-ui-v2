@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app :dark="darkMode">
     <v-navigation-drawer
       v-model="navigationVisible"
       app
@@ -64,7 +64,10 @@
       editorVisible () {
         return this.$vuetify.breakpoint.mdAndUp || !this.previewVisible
       },
-      ...mapState(['previewVisible'])
+      ...mapState([
+        'previewVisible',
+        'darkMode'
+      ])
     },
     watch: {
       '$fs.fullscreen' (value) {
