@@ -19,7 +19,6 @@
       />
     </template>
     <div
-      v-if="draft"
       ref="draftContainer"
       class="draft__container"
     >
@@ -27,11 +26,6 @@
         class="draft__content"
         v-html="draft"
       />
-    </div>
-    <div v-else>
-      <i>
-        No preview available.
-      </i>
     </div>
   </panel>
 </template>
@@ -137,15 +131,19 @@
         const site = this.sitesById[siteId]
 
         if (!site.formats.includes(extension)) {
-          this.draft = null
+          this.draft = '<i>No renderer is available for this format.</i>'
           return Promise.resolve(null)
         }
 
-        return this.$api.render(siteId, extension, content).then(
-          ({ content }) => {
-            this.draft = content
-          }
-        )
+        return this.$api.render(siteId, extension, content)
+          .then(
+            ({ content }) => {
+              this.draft = content
+            }
+          )
+          .catch((e) => {
+            this.draft = `<i style="color: red">An error occurred while rendering the preview.</i>`
+          })
       }, 250),
       syncScrollPosition () {
         const { draftContainer: el } = this.$refs
