@@ -8,6 +8,14 @@ export default {
           editors: {}
         }
       },
+      computed: {
+        mac () {
+          return /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)
+        },
+        meta () {
+          return this.mac ? 'Cmd' : 'Ctrl'
+        }
+      },
       methods: {
         registerEditor (contentTypes, icon, component) {
           contentTypes.forEach(contentType => {
