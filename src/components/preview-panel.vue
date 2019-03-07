@@ -51,6 +51,10 @@
       box-shadow none;
       border-radius 0
       font-weight normal
+      &:before
+        content ""
+      &:after
+        content ""
 
     >>>pre, >>>code, >>>kbd
       font-family "Roboto Mono", monospace
