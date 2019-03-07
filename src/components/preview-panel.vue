@@ -18,16 +18,52 @@
         icon="mdi-open-in-new"
       />
     </template>
-    PREVIEW
+    <div
+      v-if="draft"
+      class="draft"
+      v-html="draft"
+    />
+    <div v-else>
+      <i>
+        No preview available.
+      </i>
+    </div>
   </panel>
 </template>
+
+<style lang="stylus" scoped>
+  .draft
+    margin 1em 2em
+    font-size 16px
+
+    // Reset margins that vuetify strips. Let me know if I missed anything.
+    >>>p, >>>pre, >>>ul, >>>ol, >>>blockquote
+      margin 1em 0
+
+    >>>h1, >>>h2, >>>h3, >>>h4, >>>h5, >>>h6
+      margin 0.83em 0
+
+    >>>code, >>>kbd
+      color inherit
+      background inherit
+      box-shadow none;
+      border-radius 0
+      font-weight normal
+
+    >>>pre, >>>code, >>>kbd
+      font-family "Roboto Mono", monospace
+
+    >>>pre
+      overflow-x auto
+</style>
 
 <script>
   import Panel from './panel'
   import PanelToolbarButton from './panel-toolbar-button'
   import PanelToolbarDivider from './panel-toolbar-divider'
   import PanelToolbarOptions from './panel-toolbar-options'
-  import { mapActions } from 'vuex'
+  import { mapActions, mapGetters, mapState } from 'vuex'
+  import throttle from 'lodash/throttle'
 
   export default {
     components: {
@@ -48,10 +84,57 @@
             'value': 'render',
             'label': 'Render'
           }
-        ]
+        ],
+        draft: null
       }
     },
+    computed: {
+      ...mapState([
+        'editorItem',
+        'editorContent'
+      ]),
+      ...mapGetters([
+        'sitesById'
+      ])
+    },
+    watch: {
+      sites () {
+        this.renderDraft()
+      },
+      editorItem () {
+        this.renderDraft()
+      },
+      editorContent () {
+        this.renderDraft()
+      }
+    },
+    mounted () {
+      this.renderDraft()
+    },
     methods: {
+      renderDraft: throttle(function () {
+        const { editorItem: item, editorContent: content } = this
+
+        if (!item || !content) {
+          this.draft = null
+          return
+        }
+
+        const { name, siteId } = item
+        const extension = name.split('.').pop()
+        const site = this.sitesById[siteId]
+
+        if (!site.formats.includes(extension)) {
+          this.draft = null
+          return
+        }
+
+        this.$api.render(siteId, extension, content).then(
+          ({ content }) => {
+            this.draft = content
+          }
+        )
+      }, 250),
       ...mapActions([
         'setPreviewVisible'
       ])

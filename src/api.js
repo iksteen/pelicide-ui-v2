@@ -94,6 +94,13 @@ export default {
             content
           })
         },
+        render (siteId, format, content) {
+          return this.invoke('render', {
+            site_id: siteId,
+            format,
+            content
+          })
+        },
         ...mapActions(['setSites', 'setCurrentSiteId', 'setSiteFiles'])
       },
       sockets: {
