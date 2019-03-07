@@ -69,7 +69,7 @@
           this.navigationVisibleBeforeFullscreen = this.navigationVisible
           this.setNavigationVisible(false)
         } else {
-          this.navigationVisible = this.navigationVisibleBeforeFullscreen
+          this.setNavigationVisible(this.navigationVisibleBeforeFullscreen)
         }
       }
     },
