@@ -15,6 +15,18 @@ export default {
         indentUnit: 4
       }
     },
+    keymap () {
+      const { meta } = this.$pelicide
+      return {
+        [`${meta}-B`]: this.bold,
+        [`${meta}-I`]: this.italic,
+        [`${meta}-T`]: this.strikethrough,
+        [`${meta}-H`]: this.heading,
+        [`${meta}-L`]: this.link,
+        [`${meta}-O`]: this.image,
+        [`${meta}-U`]: this.ulist
+      }
+    },
     bold () {
       this.surroundSelection('**').focus()
     },
