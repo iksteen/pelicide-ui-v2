@@ -2,7 +2,7 @@
   <div>
     <resize-observer
       class="observer"
-      @notify="onResize"
+      @notify="resize"
     />
     <codemirror
       ref="cm"
@@ -83,8 +83,60 @@
         const f = scrollTop / (scrollHeight - clientHeight)
         this.setEditorScrollFraction(f)
       },
-      onResize () {
+      resize () {
         this.cm && this.cm.refresh()
+      },
+      focus () {
+        this.cm && this.cm.focus()
+      },
+      getSelection () {
+        return this.cm.getDoc().getSelection()
+      },
+      replaceInLines (search, replace, skipEmpty = true) {
+        const doc = this.cm.getDoc()
+
+        function replaceInLine(lineNo) {
+          const line = doc.getLine(lineNo)
+          if (!line && skipEmpty) {
+            return
+          }
+
+          const [ value, start, end ] = replace(search.exec(line), line)
+          if (value !== null) {
+            doc.replaceRange(
+              value,
+              { line: lineNo, ch: start || 0 },
+              { line: lineNo, ch: end || 0 }
+            )
+          }
+        }
+
+        const from = doc.getCursor('from').line
+        const to = doc.getCursor('to').line
+
+        for (let i = from; i <= to; ++i) {
+          replaceInLine(i)
+        }
+
+        return this
+      },
+      surroundSelection (prefix, suffix = null, offset = null) {
+        if (suffix === null) {
+          suffix = prefix
+        }
+
+        if (offset === null) {
+          offset = suffix.length
+        }
+
+        const doc = this.cm.getDoc()
+        doc.replaceSelection(prefix + doc.getSelection() + suffix)
+
+        const cursor = doc.getCursor()
+        cursor.ch -= offset
+        doc.setCursor(cursor)
+
+        return this
       }
     }
   }

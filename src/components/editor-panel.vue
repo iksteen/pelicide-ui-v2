@@ -153,7 +153,7 @@
     },
     methods: {
       getEditorComponent () {
-        return this.editorComponent
+        return this.$refs.editor
       },
       setEditorToolbar (toolbar) {
         this.editorToolbar = toolbar
