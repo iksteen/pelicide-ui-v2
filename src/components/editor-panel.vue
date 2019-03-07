@@ -193,7 +193,8 @@
             ])
               .then(([{ content }]) => {
                 if (this.editorItem === item) {
-                  this.content = this.originalContent = content
+                  this.originalContent = content
+                  this.setEditorContent(content)
                 }
               })
               .catch(({ message }) => {
@@ -207,7 +208,7 @@
           return
         }
         const { siteId, anchor, path, name } = this.editorItem
-        const content = this.content
+        const content = this.editorContent
         this.$api.putFileContent(
           siteId,
           anchor,
