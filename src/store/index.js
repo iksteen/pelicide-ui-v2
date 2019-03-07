@@ -8,7 +8,8 @@ import {
   SET_CURRENT_SITE_ID,
   SET_SITE_FILES,
   SET_EDITOR_ITEM,
-  SET_EDITOR_CONTENT
+  SET_EDITOR_CONTENT,
+  SET_EDITOR_SCROLL_FRACTION
 } from './mutation-types'
 
 Vue.use(Vuex)
@@ -24,7 +25,8 @@ export default new Vuex.Store({
     currentSiteId: null,
     siteFiles: EMPTY_FILES,
     editorItem: null,
-    editorContent: null
+    editorContent: null,
+    editorScrollFraction: 0.0
   },
   getters: {
     sitesById (state) {
@@ -62,6 +64,9 @@ export default new Vuex.Store({
     },
     [SET_EDITOR_CONTENT] (state, value) {
       state.editorContent = value
+    },
+    [SET_EDITOR_SCROLL_FRACTION] (state, value) {
+      state.editorScrollFraction = value
     }
   },
   actions: {
@@ -92,6 +97,9 @@ export default new Vuex.Store({
     },
     setEditorContent ({ commit }, value) {
       commit(SET_EDITOR_CONTENT, value)
+    },
+    setEditorScrollFraction ({ commit }, value) {
+      commit(SET_EDITOR_SCROLL_FRACTION, value)
     }
   }
 })

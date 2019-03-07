@@ -38,6 +38,7 @@
   import 'codemirror/lib/codemirror.css'
 
   export default {
+    inject: ['setEditorScrollFraction'],
     components: {
       ResizeObserver,
       codemirror
@@ -70,9 +71,17 @@
       },
       cmReady (cm) {
         this.cm = cm
+        const el = cm.getScrollerElement()
+        el.addEventListener('scroll', this.cmScroll)
+        this.cmScroll({ target: el })
       },
       cmInput (value) {
         this.$emit('input', value)
+      },
+      cmScroll (event) {
+        const { target: { scrollTop, scrollHeight, clientHeight } } = event
+        const f = scrollTop / (scrollHeight - clientHeight)
+        this.setEditorScrollFraction(f)
       },
       onResize () {
         this.cm && this.cm.refresh()

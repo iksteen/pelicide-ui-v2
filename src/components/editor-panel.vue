@@ -239,13 +239,15 @@
         'setPreviewVisible',
         'setToolbarStyle',
         'setEditorItem',
-        'setEditorContent'
+        'setEditorContent',
+        'setEditorScrollFraction'
       ])
     },
     provide () {
       return {
         getEditorComponent: this.getEditorComponent,
-        setEditorToolbar: this.setEditorToolbar
+        setEditorToolbar: this.setEditorToolbar,
+        setEditorScrollFraction: this.setEditorScrollFraction
       }
     }
   }

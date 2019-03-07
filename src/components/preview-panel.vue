@@ -20,9 +20,14 @@
     </template>
     <div
       v-if="draft"
-      class="draft"
-      v-html="draft"
-    />
+      ref="draftContainer"
+      class="draft__container"
+    >
+      <div
+        class="draft__content"
+        v-html="draft"
+      />
+    </div>
     <div v-else>
       <i>
         No preview available.
@@ -32,8 +37,11 @@
 </template>
 
 <style lang="stylus" scoped>
-  .draft
-    margin 1em 2em
+  .draft__container
+    overflow-y auto
+
+  .draft__content
+    margin 1em 1.5em
     font-size 16px
 
     // Reset margins that vuetify strips. Let me know if I missed anything.
@@ -91,7 +99,8 @@
     computed: {
       ...mapState([
         'editorItem',
-        'editorContent'
+        'editorContent',
+        'editorScrollFraction'
       ]),
       ...mapGetters([
         'sitesById'
@@ -105,11 +114,14 @@
         this.renderDraft()
       },
       editorContent () {
-        this.renderDraft()
+        this.renderDraft().then(() => this.syncScrollPosition())
+      },
+      editorScrollFraction (f) {
+        this.syncScrollPosition()
       }
     },
     mounted () {
-      this.renderDraft()
+      this.renderDraft().then(() => this.syncScrollPosition())
     },
     methods: {
       renderDraft: throttle(function () {
@@ -117,7 +129,7 @@
 
         if (!item || !content) {
           this.draft = null
-          return
+          return Promise.resolve(null)
         }
 
         const { name, siteId } = item
@@ -126,15 +138,24 @@
 
         if (!site.formats.includes(extension)) {
           this.draft = null
-          return
+          return Promise.resolve(null)
         }
 
-        this.$api.render(siteId, extension, content).then(
+        return this.$api.render(siteId, extension, content).then(
           ({ content }) => {
             this.draft = content
           }
         )
       }, 250),
+      syncScrollPosition () {
+        const { draftContainer: el } = this.$refs
+        const { editorScrollFraction: f } = this
+        if (!el) {
+          return
+        }
+
+        el.scrollTop = f * (el.scrollHeight - el.clientHeight)
+      },
       ...mapActions([
         'setPreviewVisible'
       ])
