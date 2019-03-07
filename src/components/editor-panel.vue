@@ -2,8 +2,9 @@
   <panel class="editor">
     <template v-slot:toolbar>
       <panel-toolbar-toggle
-        v-model="navigationVisible"
+        :value="navigationVisible"
         icon="mdi-file-tree"
+        @input="setNavigationVisible"
       />
 
       <perfect-scrollbar>
@@ -42,7 +43,7 @@
       />
       <panel-toolbar-button
         icon="mdi-settings"
-        @click="onChangeToolbarStyle"
+        @click="changeToolbarStyle"
       />
       <panel-toolbar-button
         class="hidden-md-and-up"
@@ -50,9 +51,10 @@
         @click="setPreviewVisible(true)"
       />
       <panel-toolbar-toggle
-        v-model="previewVisible"
+        :value="previewVisible"
         class="hidden-sm-and-down"
         icon="mdi-eye-outline"
+        @input="setPreviewVisible"
       />
     </template>
 
@@ -69,7 +71,8 @@
     <component
       :is="editorComponent"
       ref="editor"
-      v-model="content"
+      :value="editorContent"
+      @input="setEditorContent"
     />
   </panel>
 </template>
@@ -111,16 +114,8 @@
       }
     },
     computed: {
-      content: {
-        get () {
-          return this.editorContent
-        },
-        set (value) {
-          this.setEditorContent(value)
-        }
-      },
       changed () {
-        return this.content !== this.originalContent
+        return this.editorContent !== this.originalContent
       },
       error: {
         get () {
@@ -130,27 +125,13 @@
           this.errorMessage = val || null
         }
       },
-      navigationVisible: {
-        get () {
-          return this.$store.state.navigationVisible
-        },
-        set (value) {
-          this.setNavigationVisible(value)
-        }
-      },
-      previewVisible: {
-        get () {
-          return this.$store.state.previewVisible
-        },
-        set (value) {
-          this.setPreviewVisible(value)
-        }
-      },
       ...mapState([
+        'navigationVisible',
+        'previewVisible',
         'toolbarStyle',
+        'darkMode',
         'editorItem',
-        'editorContent',
-        'darkMode'
+        'editorContent'
       ])
     },
     watch: {
@@ -159,7 +140,8 @@
           this.editorToolbar = null
         }
 
-        this.content = this.originalContent = null
+        this.setEditorContent(null)
+        this.originalContent = null
         this.error = null
       }
     },
@@ -176,7 +158,7 @@
       setEditorToolbar (toolbar) {
         this.editorToolbar = toolbar
       },
-      onChangeToolbarStyle () {
+      changeToolbarStyle () {
         this.setToolbarStyle({
           'normal': 'small',
           'small': 'tiny'

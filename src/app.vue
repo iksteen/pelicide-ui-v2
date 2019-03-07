@@ -1,8 +1,9 @@
 <template>
   <v-app :dark="darkMode">
     <v-navigation-drawer
-      v-model="navigationVisible"
+      :value="navigationVisible"
       app
+      @input="setNavigationVisible"
     >
       <navigation-panel />
     </v-navigation-drawer>
@@ -53,18 +54,11 @@
       }
     },
     computed: {
-      navigationVisible: {
-        get () {
-          return this.$store.state.navigationVisible
-        },
-        set (value) {
-          this.setNavigationVisible(value || false)
-        }
-      },
       editorVisible () {
         return this.$vuetify.breakpoint.mdAndUp || !this.previewVisible
       },
       ...mapState([
+        'navigationVisible',
         'previewVisible',
         'darkMode'
       ])
