@@ -61,14 +61,20 @@ export default {
           })
         },
         listSites () {
-          return this.invoke('list_sites')
+          return this.invoke('list_sites').then(
+            sites => sites.map(({ site_id: siteId, name, formats }) => ({
+              siteId,
+              name,
+              formats
+            }))
+          )
         },
-        listSiteFiles (id) {
-          return this.invoke('list_site_files', { id })
+        listSiteFiles (siteId) {
+          return this.invoke('list_site_files', { site_id: siteId })
         },
         autoSelectSite () {
           if (this.sites.length) {
-            this.setCurrentSiteId(this.sites[0].id)
+            this.setCurrentSiteId(this.sites[0].siteId)
           }
         },
         getFileContent (siteId, anchor, path, name) {

@@ -29,7 +29,7 @@ export default new Vuex.Store({
   getters: {
     sitesById (state) {
       return state.sites.reduce((acc, site) => {
-        acc[site.id] = site
+        acc[site.siteId] = site
         return acc
       }, {})
     },
