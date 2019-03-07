@@ -24,7 +24,7 @@ export default {
     strikethrough () {
       this.surroundSelection('<s>', '</s>').focus()
     },
-    header () {
+    heading () {
       this.replaceInLines(
         /^(#+)\s?/,
         match => match

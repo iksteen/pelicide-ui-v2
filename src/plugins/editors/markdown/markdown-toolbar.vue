@@ -14,7 +14,7 @@
     />
     <panel-toolbar-button
       icon="mdi-format-header-pound"
-      @click="editor.header"
+      @click="editor.heading"
     />
     <panel-toolbar-divider />
     <panel-toolbar-button
