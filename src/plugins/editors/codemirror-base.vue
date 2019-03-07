@@ -95,7 +95,7 @@
       replaceInLines (search, replace, skipEmpty = true) {
         const doc = this.cm.getDoc()
 
-        function replaceInLine(lineNo) {
+        function replaceInLine (lineNo) {
           const line = doc.getLine(lineNo)
           if (!line && skipEmpty) {
             return
