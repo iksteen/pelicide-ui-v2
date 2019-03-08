@@ -28,6 +28,8 @@
           <panel-toolbar-button
             icon="mdi-wrench"
             tooltip="Render page"
+            :disabled="!editorItem || editorItem.anchor !== 'content' || building"
+            @click="build"
           />
 
           <panel-toolbar-divider
@@ -119,7 +121,8 @@
         originalContent: null,
         errorMessage: null,
         editorComponent: null,
-        editorToolbar: null
+        editorToolbar: null,
+        building: false
       }
     },
     computed: {
@@ -232,7 +235,16 @@
             this.error = `Failed to save ${name}: ${message}`
           })
       },
+      build () {
+        const { editorItem: item } = this
+        this.building = true
+        this.$api.build(item.siteId, [[item.path, item.name]])
+          .then(() => this.$pelicide.$emit('preview-render-reload'))
+          .catch(e => this.setMessage({ color: 'error', text: `Failed to build page: ${e.message}.` }))
+          .then(() => { this.building = false })
+      },
       ...mapActions([
+        'setMessage',
         'setNavigationVisible',
         'setPreviewVisible',
         'setToolbarStyle',

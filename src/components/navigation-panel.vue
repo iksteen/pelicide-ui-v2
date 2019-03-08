@@ -7,7 +7,9 @@
       />
       <panel-toolbar-button
         icon="mdi-wrench"
-        tooltip="Render site"
+        tooltip="Build site"
+        :disabled="!currentSiteId || building"
+        @click="build"
       />
       <panel-toolbar-button
         icon="mdi-cloud-upload"
@@ -61,7 +63,7 @@
   import PanelToolbarButton from './panel-toolbar-button'
   import PanelToolbarDivider from './panel-toolbar-divider'
   import Treeview from './treeview'
-  import { mapGetters, mapState } from 'vuex'
+  import { mapActions, mapGetters, mapState } from 'vuex'
 
   function getTreeNode (nodeId, root, path) {
     return path.reduce((parent, el) => {
@@ -93,7 +95,8 @@
     },
     data () {
       return {
-        activeItem: null
+        activeItem: null,
+        building: false
       }
     },
     computed: {
@@ -239,7 +242,18 @@
         if (item) {
           this.$pelicide.openInEditor(item)
         }
-      }
+      },
+      build () {
+        this.building = true
+        this.$api.build(this.currentSiteId)
+          .then(() => {
+            this.$pelicide.$emit('preview-render-reload')
+            this.setMessage({ text: 'Site built' })
+          })
+          .catch(e => this.setMessage({ color: 'error', text: `Failed to build site: ${e.message}.` }))
+          .then(() => { this.building = false })
+      },
+      ...mapActions(['setMessage'])
     }
   }
 </script>

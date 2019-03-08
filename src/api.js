@@ -101,6 +101,12 @@ export default {
             content
           })
         },
+        build (siteId, paths = null) {
+          return this.invoke('build', {
+            site_id: siteId,
+            paths: paths
+          })
+        },
         ...mapActions(['setSites', 'setCurrentSiteId', 'setSiteFiles'])
       },
       sockets: {
