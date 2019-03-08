@@ -74,6 +74,33 @@
     watch: {
       editorItem () {
         this.loadPreview()
+      },
+      frameRef () {
+        let prevDoc = null
+        let doc = null
+        try {
+          prevDoc = this.nextFrameRef.contentDocument
+          doc = this.frameRef.contentDocument
+        } catch {
+          // Cross-origin error.
+        }
+        if (!prevDoc || !doc || prevDoc.location.href !== doc.location.href) {
+          return
+        }
+
+        const scrollTop = ['html', 'body'].map(tag => {
+          const els = prevDoc.getElementsByTagName(tag)
+          return els.length ? els[0].scrollTop : 0
+        })
+
+        this.$nextTick(() => {
+          ['html', 'body'].forEach((tag, i) => {
+            const els = doc.getElementsByTagName(tag)
+            if (els.length) {
+              els[0].scrollTop = scrollTop[i]
+            }
+          })
+        })
       }
     },
     mounted () {
