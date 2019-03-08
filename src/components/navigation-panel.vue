@@ -1,13 +1,28 @@
 <template>
   <panel>
     <template v-slot:toolbar>
-      <panel-toolbar-button icon="mdi-refresh" />
-      <panel-toolbar-button icon="mdi-wrench" />
-      <panel-toolbar-button icon="mdi-cloud-upload" />
+      <panel-toolbar-button
+        icon="mdi-refresh"
+        tooltip="Refresh project files"
+      />
+      <panel-toolbar-button
+        icon="mdi-wrench"
+        tooltip="Render site"
+      />
+      <panel-toolbar-button
+        icon="mdi-cloud-upload"
+        tooltip="Publish site"
+      />
       <panel-toolbar-divider />
-      <panel-toolbar-button icon="mdi-file-plus" />
+      <panel-toolbar-button
+        icon="mdi-file-plus"
+        tooltip="Add new article or page"
+      />
       <v-spacer />
-      <panel-toolbar-button icon="mdi-web" />
+      <panel-toolbar-button
+        icon="mdi-web"
+        tooltip="Change active site"
+      />
     </template>
 
     <panel-section active>

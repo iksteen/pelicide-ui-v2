@@ -4,7 +4,8 @@
       <panel-toolbar-toggle
         :value="navigationVisible"
         icon="mdi-file-tree"
-        @input="setNavigationVisible"
+        tooltip="Toggle navigation panel"
+        @change="setNavigationVisible"
       />
 
       <perfect-scrollbar>
@@ -12,6 +13,7 @@
           <panel-toolbar-toggle
             v-model="$fs.fullscreen"
             icon="mdi-fullscreen"
+            tooltip="Toggle focus mode"
           />
 
           <panel-toolbar-divider />
@@ -19,10 +21,13 @@
           <panel-toolbar-button
             icon="mdi-content-save"
             :disabled="!changed"
+            tooltip="Save"
             @click="save"
           />
+
           <panel-toolbar-button
             icon="mdi-wrench"
+            tooltip="Render page"
           />
 
           <panel-toolbar-divider
@@ -39,22 +44,26 @@
       <panel-toolbar-toggle
         :value="darkMode"
         icon="mdi-theme-light-dark"
-        @input="setDarkMode"
+        tooltip="Toggle dark mode"
+        @change="setDarkMode"
       />
       <panel-toolbar-button
         icon="mdi-settings"
+        tooltip="Toggle toolbar size"
         @click="changeToolbarStyle"
       />
       <panel-toolbar-button
         class="hidden-md-and-up"
         icon="mdi-eye-outline"
+        tooltip="Show preview"
         @click="setPreviewVisible(true)"
       />
       <panel-toolbar-toggle
         :value="previewVisible"
         class="hidden-sm-and-down"
         icon="mdi-eye-outline"
-        @input="setPreviewVisible"
+        tooltip="Toggle preview panel"
+        @change="setPreviewVisible"
       />
     </template>
 

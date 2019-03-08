@@ -6,17 +6,25 @@
         icon="mdi-pencil"
         @click="setPreviewVisible(false)"
       />
+
       <panel-toolbar-options
         v-model="mode"
         :options="modes"
       />
-      <panel-toolbar-divider />
-      <panel-toolbar-button
-        icon="mdi-refresh"
-      />
-      <panel-toolbar-button
-        icon="mdi-open-in-new"
-      />
+
+      <v-toolbar-items v-show="mode === 'render'">
+        <panel-toolbar-divider />
+
+        <panel-toolbar-button
+          icon="mdi-refresh"
+          tooltip="Refresh page"
+        />
+
+        <panel-toolbar-button
+          icon="mdi-open-in-new"
+          tooltip="Open in new window"
+        />
+      </v-toolbar-items>
     </template>
     <div
       ref="draftContainer"
@@ -83,12 +91,14 @@
         mode: 'draft',
         modes: [
           {
-            'value': 'draft',
-            'label': 'Draft'
+            value: 'draft',
+            label: 'Draft',
+            tooltip: 'Switch to draft preview'
           },
           {
-            'value': 'render',
-            'label': 'Render'
+            value: 'render',
+            label: 'Render',
+            tooltip: 'Switch to render preview'
           }
         ],
         draft: null
