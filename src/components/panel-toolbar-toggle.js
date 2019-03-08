@@ -31,21 +31,21 @@ export default {
       const icon = h(VIcon, { props: { small } }, [this.icon])
 
       const button = h(VBtn, {
+        class: 'mx-1',
+        on,
         props: {
           small,
           icon: true,
           value: true
-        },
-        class: 'mx-1',
-        on
+        }
       }, [icon])
 
       return h(VBtnToggle, {
+        class: 'transparent',
+        on: { change: this.change },
         props: {
           value: this.value
-        },
-        class: 'transparent',
-        on: { change: this.change }
+        }
       }, [button])
     }
   }

@@ -1,5 +1,6 @@
-import { VBtnToggle, VBtn, VTooltip } from 'vuetify/lib'
+import { VBtnToggle, VBtn } from 'vuetify/lib'
 import { mapState } from 'vuex'
+import { renderTooltip } from './tooltip-mixin'
 
 export default {
   model: {
@@ -40,12 +41,7 @@ export default {
 
     const children = this.options.map(option => {
       if (option.tooltip) {
-        return h(VTooltip, {
-          props: { bottom: true },
-          scopedSlots: {
-            activator: ({ on }) => genButton(option, on)
-          }
-        }, [option.tooltip])
+        return renderTooltip(h, option.tooltip, {}, (h, on) => genButton(option, on))
       } else {
         return genButton(option)
       }
