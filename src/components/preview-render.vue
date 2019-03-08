@@ -77,7 +77,11 @@
       }
     },
     mounted () {
+      this.$pelicide.$on('preview-render-reload', this.loadPreview)
       this.loadPreview()
+    },
+    destroyed () {
+      this.$pelicide.$off('preview-render-reload', this.loadPreview)
     },
     methods: {
       swap () {
