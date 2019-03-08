@@ -30,6 +30,19 @@
         </v-layout>
       </v-container>
       <connecting-dialog :loading="!$api.ready" />
+      <v-snackbar
+        :value="message"
+        :timeout="(message && message.timeout !== undefined) ? message.timeout : 3000"
+        :color="message && message.color"
+      >
+        {{ message && message.text }}
+        <v-btn
+          flat
+          @click="setMessage(null)"
+        >
+          Close
+        </v-btn>
+      </v-snackbar>
     </v-content>
   </v-app>
 </template>
@@ -58,6 +71,7 @@
         return this.$vuetify.breakpoint.mdAndUp || !this.previewVisible
       },
       ...mapState([
+        'message',
         'navigationVisible',
         'previewVisible',
         'darkMode'
@@ -75,6 +89,7 @@
     },
     methods: {
       ...mapActions([
+        'setMessage',
         'setNavigationVisible'
       ])
     }

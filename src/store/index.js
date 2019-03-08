@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import {
+  SET_MESSAGE,
   SET_NAVIGATION_VISIBLE,
   SET_PREVIEW_VISIBLE,
   SET_TOOLBAR_STYLE,
@@ -19,6 +20,7 @@ const EMPTY_FILES = { content: [], theme: [] }
 
 export default new Vuex.Store({
   state: {
+    message: null,
     navigationVisible: true,
     previewVisible: true,
     toolbarStyle: localStorage.getItem('toolbar-style') || 'dense',
@@ -42,6 +44,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    [SET_MESSAGE] (state, value) {
+      state.message = value
+    },
     [SET_NAVIGATION_VISIBLE] (state, value) {
       state.navigationVisible = value
     },
@@ -75,6 +80,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    setMessage ({ commit }, value) {
+      commit(SET_MESSAGE, value)
+    },
     setNavigationVisible ({ commit }, value) {
       commit(SET_NAVIGATION_VISIBLE, value)
     },
