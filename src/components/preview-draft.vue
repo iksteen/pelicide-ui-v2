@@ -64,7 +64,7 @@
       ])
     },
     watch: {
-      sites () {
+      sitesById () {
         this.renderDraft()
       },
       editorItem () {
