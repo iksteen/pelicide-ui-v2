@@ -159,6 +159,9 @@
     },
     mounted () {
       this.$pelicide.$on('open-in-editor', this.open)
+      if (this.editorItem) {
+        this.open(this.editorItem)
+      }
     },
     destroyed () {
       this.$pelicide.$off('open-in-editor', this.open)
