@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify/lib'
 import PerfectScrollbar from 'vue2-perfect-scrollbar'
+import VueKeybindings from 'vue-keybindings'
 
 import Fullscreen from './plugins/fullscreen'
 
@@ -23,6 +24,7 @@ Vue.use(Vuetify, {
   iconfont: 'mdi'
 })
 Vue.use(PerfectScrollbar)
+Vue.use(VueKeybindings)
 Vue.use(Fullscreen)
 
 // Register editor factory and editors

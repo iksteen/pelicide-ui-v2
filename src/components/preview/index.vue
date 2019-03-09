@@ -4,6 +4,7 @@
       <panel-toolbar-button
         class="hidden-md-and-up"
         icon="mdi-pencil"
+        :tooltip="`Show editor (${meta}-Shift-P)`"
         @click="setPreviewVisible(false)"
       />
 
@@ -58,6 +59,11 @@
             tooltip: 'Switch to render preview'
           }
         ]
+      }
+    },
+    computed: {
+      meta () {
+        return this.$pelicide.meta
       }
     },
     methods: {

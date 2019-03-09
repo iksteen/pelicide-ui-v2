@@ -4,7 +4,7 @@
       <panel-toolbar-toggle
         :value="navigationVisible"
         icon="mdi-file-tree"
-        tooltip="Toggle navigation panel"
+        :tooltip="`Toggle navigation panel (${meta}-Shift-O)`"
         @change="setNavigationVisible"
       />
 
@@ -13,7 +13,7 @@
           <panel-toolbar-toggle
             v-model="$fs.fullscreen"
             icon="mdi-fullscreen"
-            tooltip="Toggle focus mode"
+            :tooltip="`Toggle focus mode (${meta}-Enter)`"
           />
 
           <panel-toolbar-divider />
@@ -21,13 +21,13 @@
           <panel-toolbar-button
             icon="mdi-content-save"
             :disabled="!changed"
-            tooltip="Save"
+            :tooltip="`Save (${meta}-S)`"
             @click="save"
           />
 
           <panel-toolbar-button
             icon="mdi-wrench"
-            tooltip="Save and build page"
+            :tooltip="`Save and build page (${meta}-E)`"
             :disabled="!editorItem || editorItem.anchor !== 'content' || building"
             @click="build"
           />
@@ -57,14 +57,14 @@
       <panel-toolbar-button
         class="hidden-md-and-up"
         icon="mdi-eye-outline"
-        tooltip="Show preview"
+        :tooltip="`Show preview (${meta}-Shift-P)`"
         @click="setPreviewVisible(true)"
       />
       <panel-toolbar-toggle
         :value="previewVisible"
         class="hidden-sm-and-down"
         icon="mdi-eye-outline"
-        tooltip="Toggle preview panel"
+        :tooltip="`Toggle preview panel (${meta}-Shift-P)`"
         @change="setPreviewVisible"
       />
     </template>
@@ -112,6 +112,9 @@
       changed () {
         return this.editorContent !== this.originalContent
       },
+      meta () {
+        return this.$pelicide.meta
+      },
       ...mapState([
         'navigationVisible',
         'previewVisible',
@@ -132,6 +135,13 @@
       }
     },
     mounted () {
+      const meta = { Cmd: 'meta', Ctrl: 'ctrl' }[this.meta]
+      this.$shortcut.add('save', [meta, 's'])
+      this.$shortcut.add('build', [meta, 'e'])
+      this.$shortcut.add('navigation', ['shift', meta, 'o'])
+      this.$shortcut.add('preview', ['shift', meta, 'p'])
+      this.$shortcut.add('focus', [meta, 'enter'])
+
       this.$pelicide.$on('editor-open', this.open)
       this.$pelicide.$on('editor-save', this._save)
       if (this.editorItem) {
@@ -139,6 +149,13 @@
       }
     },
     destroyed () {
+      const meta = { Cmd: 'meta', Ctrl: 'ctrl' }[this.meta]
+      this.$shortcut.remove('save', [meta, 's'])
+      this.$shortcut.remove('build', [meta, 'e'])
+      this.$shortcut.remove('navigation', ['shift', meta, 'o'])
+      this.$shortcut.remove('preview', ['shift', meta, 'p'])
+      this.$shortcut.remove('focus', [meta, 'enter'])
+
       this.$pelicide.$off('editor-open', this.open)
       this.$pelicide.$off('editor-save', this._save)
     },
@@ -251,6 +268,28 @@
         getEditorComponent: this.getEditorComponent,
         setEditorToolbar: this.setEditorToolbar,
         setEditorScrollFraction: this.setEditorScrollFraction
+      }
+    },
+    shortcuts: {
+      save (e) {
+        e.preventDefault()
+        this.save()
+      },
+      build (e) {
+        e.preventDefault()
+        this.build()
+      },
+      navigation (e) {
+        e.preventDefault()
+        this.setNavigationVisible(!this.navigationVisible)
+      },
+      preview (e) {
+        e.preventDefault()
+        this.setPreviewVisible(!this.previewVisible)
+      },
+      focus (e) {
+        e.preventDefault()
+        this.$fs.fullscreen = !this.$fs.fullscreen
       }
     }
   }

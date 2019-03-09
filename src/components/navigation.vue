@@ -8,7 +8,7 @@
       />
       <panel-toolbar-button
         icon="mdi-wrench"
-        tooltip="Save and build site"
+        :tooltip="`Save and build site (${meta}-Shift-E)`"
         :disabled="!currentSiteId || building"
         @click="build"
       />
@@ -216,8 +216,19 @@
           this.editorItem.anchor === 'theme'
         ) ? this.editorItem.id : null
       },
+      meta () {
+        return this.$pelicide.meta
+      },
       ...mapState(['siteFiles', 'currentSiteId', 'editorItem']),
       ...mapGetters(['currentSite'])
+    },
+    mounted () {
+      const meta = { Cmd: 'meta', Ctrl: 'ctrl' }[this.meta]
+      this.$shortcut.add('build', ['shift', meta, 'e'])
+    },
+    destroyed () {
+      const meta = { Cmd: 'meta', Ctrl: 'ctrl' }[this.meta]
+      this.$shortcut.add('build', ['shift', meta, 'e'])
     },
     methods: {
       buildTree (nodeId, anchor, items, pathGetter) {
@@ -264,6 +275,12 @@
         'setMessage',
         'setError'
       ])
+    },
+    shortcuts: {
+      build (e) {
+        e.preventDefault()
+        this.build()
+      }
     }
   }
 </script>
