@@ -69,16 +69,6 @@
       />
     </template>
 
-    <div class="alert">
-      <v-alert
-        v-model="error"
-        dismissible
-        type="error"
-      >
-        {{ errorMessage }}
-      </v-alert>
-    </div>
-
     <component
       :is="editorComponent"
       ref="editor"
@@ -94,12 +84,6 @@
   .editor
     background-color $editor-background-color
     color $editor-color
-
-  .alert
-    position absolute
-    width 90%
-    margin 0 5% 0 5%
-    z-index 2147483647
 </style>
 
 <script>
@@ -119,7 +103,6 @@
     data () {
       return {
         originalContent: null,
-        errorMessage: null,
         editorComponent: null,
         editorToolbar: null,
         building: false
@@ -128,14 +111,6 @@
     computed: {
       changed () {
         return this.editorContent !== this.originalContent
-      },
-      error: {
-        get () {
-          return this.errorMessage !== null
-        },
-        set (val) {
-          this.errorMessage = val || null
-        }
       },
       ...mapState([
         'navigationVisible',
@@ -154,7 +129,6 @@
 
         this.setEditorContent(null)
         this.originalContent = null
-        this.error = null
       }
     },
     mounted () {
@@ -189,7 +163,7 @@
 
         const editor = this.$pelicide.editors[item.mimetype]
         if (editor === undefined) {
-          this.error = `Could not find editor for ${item.mimetype}.`
+          this.setError({ text: `Could not find editor for ${item.mimetype}.` })
           return
         }
 
@@ -213,18 +187,18 @@
                 }
               })
               .catch(({ message }) => {
-                this.error = `Failed to load ${item.name}: ${message}.`
+                this.setError({ text: `Failed to load ${item.name}: ${message}.` })
               })
           })
         }
       },
-      save () {
+      _save () {
         if (!this.changed || !this.editorItem) {
-          return
+          return Promise.resolve(null)
         }
         const { siteId, anchor, path, name } = this.editorItem
         const content = this.editorContent
-        this.$api.putFileContent(
+        return this.$api.putFileContent(
           siteId,
           anchor,
           path,
@@ -234,20 +208,27 @@
           .then(() => {
             this.originalContent = content
           })
-          .catch(({ message }) => {
-            this.error = `Failed to save ${name}: ${message}`
-          })
+      },
+      save () {
+        return this._save()
+          .catch(({ message }) => this.setError({ text: `Failed to save ${name}: ${message}` }))
       },
       build () {
         const { editorItem: item } = this
         this.building = true
-        this.$api.build(item.siteId, [[item.path, item.name]])
-          .then(() => this.$pelicide.$emit('preview-render-reload'))
-          .catch(e => this.setMessage({ color: 'error', text: `Failed to build page: ${e.message}.` }))
-          .then(() => { this.building = false })
+        this._save()
+          .then(
+            () => {
+              this.$api.build(item.siteId, [[item.path, item.name]])
+                .then(() => this.$pelicide.$emit('preview-render-reload'))
+                .catch(e => this.setError({ text: `Failed to build page: ${e.message}.` }))
+                .then(() => { this.building = false })
+            },
+            ({ message }) => this.setError({ text: `Failed to save ${item.name}: ${message}` })
+          )
       },
       ...mapActions([
-        'setMessage',
+        'setError',
         'setNavigationVisible',
         'setPreviewVisible',
         'setToolbarStyle',

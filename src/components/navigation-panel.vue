@@ -250,10 +250,13 @@
             this.$pelicide.$emit('preview-render-reload')
             this.setMessage({ text: 'Site built' })
           })
-          .catch(e => this.setMessage({ color: 'error', text: `Failed to build site: ${e.message}.` }))
+          .catch(e => this.setError({ text: `Failed to build site: ${e.message}.` }))
           .then(() => { this.building = false })
       },
-      ...mapActions(['setMessage'])
+      ...mapActions([
+        'setMessage',
+        'setError'
+      ])
     }
   }
 </script>

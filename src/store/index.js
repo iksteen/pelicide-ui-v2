@@ -83,6 +83,9 @@ export default new Vuex.Store({
     setMessage ({ commit }, value) {
       commit(SET_MESSAGE, value)
     },
+    setError ({ commit }, error) {
+      commit(SET_MESSAGE, { color: 'error', ...error })
+    },
     setNavigationVisible ({ commit }, value) {
       commit(SET_NAVIGATION_VISIBLE, value)
     },
