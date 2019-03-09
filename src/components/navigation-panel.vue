@@ -7,7 +7,7 @@
       />
       <panel-toolbar-button
         icon="mdi-wrench"
-        tooltip="Build site"
+        tooltip="Save and build site"
         :disabled="!currentSiteId || building"
         @click="build"
       />
@@ -245,7 +245,10 @@
       },
       build () {
         this.building = true
-        this.$api.build(this.currentSiteId)
+        new Promise((resolve, reject) => {
+          this.$pelicide.$emit('editor-save', { resolve, reject })
+        })
+          .then(() => this.$api.build(this.currentSiteId))
           .then(() => {
             this.$pelicide.$emit('preview-render-reload')
             this.setMessage({ text: 'Site built' })

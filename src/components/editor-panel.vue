@@ -27,7 +27,7 @@
 
           <panel-toolbar-button
             icon="mdi-wrench"
-            tooltip="Render page"
+            tooltip="Save and build page"
             :disabled="!editorItem || editorItem.anchor !== 'content' || building"
             @click="build"
           />
@@ -133,12 +133,14 @@
     },
     mounted () {
       this.$pelicide.$on('editor-open', this.open)
+      this.$pelicide.$on('editor-save', this._save)
       if (this.editorItem) {
         this.open(this.editorItem)
       }
     },
     destroyed () {
       this.$pelicide.$off('editor-open', this.open)
+      this.$pelicide.$off('editor-save', this._save)
     },
     methods: {
       getEditorComponent () {
