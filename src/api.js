@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { mapActions, mapGetters, mapState } from 'vuex'
+import { mapActions } from 'vuex'
 import VueNativeWebsocket from 'vue-native-websocket'
 
 export default {
@@ -23,25 +23,6 @@ export default {
           ready: false,
           requestId: 0,
           pending: {}
-        }
-      },
-      computed: {
-        ...mapGetters(['sitesById']),
-        ...mapState(['sites', 'currentSiteId'])
-      },
-      watch: {
-        sites (sites) {
-          if (this.currentSiteId === null) {
-            this.autoSelectSite()
-          }
-        },
-        currentSiteId (siteId) {
-          if (siteId === null) {
-            this.autoSelectSite()
-            return
-          }
-          this.updateSiteFiles()
-            .then(() => { this.ready = true })
         }
       },
       methods: {
@@ -80,24 +61,6 @@ export default {
               }, result)
             })
         },
-        updateSiteFiles () {
-          const { currentSiteId } = this
-
-          if (!currentSiteId) {
-            return Promise.reject(new Error('No site selected'))
-          }
-
-          return this.listSiteFiles(currentSiteId).then(files => {
-            if (currentSiteId === this.currentSiteId) {
-              this.setSiteFiles(files)
-            }
-          })
-        },
-        autoSelectSite () {
-          if (this.sites.length) {
-            this.setCurrentSiteId(this.sites[0].siteId)
-          }
-        },
         getFileContent (siteId, anchor, path, name) {
           return this.invoke('get_file_content', {
             site_id: siteId,
@@ -128,15 +91,18 @@ export default {
             paths: paths
           })
         },
-        ...mapActions(['setSites', 'setCurrentSiteId', 'setSiteFiles'])
+        ...mapActions(['setSites'])
       },
       sockets: {
         onopen () {
-          this.listSites().then(sites => this.setSites(sites))
+          this.listSites().then(sites => {
+            this.setSites(sites)
+            this.ready = true
+          })
         },
         onclose (event) {
           this.ready = false
-          Object.values(this.pending).forEach(p => p.reject('Socket disconnected'))
+          Object.values(this.pending).forEach(p => p.reject(new Error('Socket disconnected')))
         },
         onmessage ({ data }) {
           const { jsonrpc, id, result, error } = JSON.parse(data)

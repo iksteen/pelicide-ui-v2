@@ -121,8 +121,8 @@
     }
 
     return [
-      factories.reduce((tree, node) => {
-        tree[node.anchor] = node.factory(buildTree, () => nextNodeId++)
+      factories.reduce((tree, { anchor, factory }) => {
+        tree[anchor] = factory(buildTree, () => nextNodeId++)
         return tree
       }, {}),
       nodeMap
@@ -139,12 +139,17 @@
     },
     data () {
       return {
-        building: false,
-        nodes: { content: [], theme: [] },
-        nodeMap: { content: {}, theme: {} }
+        currentSiteId: null,
+        currentSiteFiles: {},
+        nodes: {},
+        nodeMap: {},
+        building: false
       }
     },
     computed: {
+      currentSite () {
+        return this.sitesById[this.currentSiteId] || null
+      },
       activeContentNodeId () {
         return this.activeNodeId('content')
       },
@@ -154,11 +159,19 @@
       meta () {
         return this.$pelicide.meta
       },
-      ...mapState(['siteFiles', 'currentSiteId', 'editorItem']),
-      ...mapGetters(['currentSite'])
+      ...mapState(['sites', 'editorItem']),
+      ...mapGetters(['sitesById'])
     },
     watch: {
-      siteFiles () {
+      sitesById () {
+        if (!this.currentSite) {
+          this.autoSelectSite()
+        }
+      },
+      currentSiteId () {
+        this.updateSiteFiles()
+      },
+      currentSiteFiles () {
         this.buildTree()
       }
     },
@@ -167,7 +180,7 @@
       this.$shortcut.add('reload', ['shift', meta, 'l'])
       this.$shortcut.add('build', ['shift', meta, 'e'])
 
-      this.buildTree()
+      this.autoSelectSite()
     },
     destroyed () {
       const meta = { Cmd: 'meta', Ctrl: 'ctrl' }[this.meta]
@@ -175,6 +188,26 @@
       this.$shortcut.add('build', ['shift', meta, 'e'])
     },
     methods: {
+      autoSelectSite () {
+        this.currentSiteId = this.sites.length ? this.sites[0].siteId : null
+      },
+      updateSiteFiles () {
+        const { currentSiteId } = this
+        if (currentSiteId) {
+          this.$api.listSiteFiles(currentSiteId)
+            .then(files => {
+              if (this.currentSiteId === currentSiteId) {
+                this.currentSiteFiles = files
+              }
+            })
+            .catch(e => {
+              this.setError(e.message)
+              this.currentSiteFiles = {}
+            })
+        } else {
+          this.currentSiteFiles = {}
+        }
+      },
       buildTree () {
         [this.nodes, this.nodeMap] = buildForest(
           (item, getNodeId) => {
@@ -243,7 +276,7 @@
                 icon: 'mdi-folder',
                 children: buildTree(
                   rootId,
-                  this.siteFiles.content.filter(itemFilter),
+                  (this.currentSiteFiles.content || []).filter(itemFilter),
                   pathGetter
                 )
               }))
@@ -252,7 +285,7 @@
               anchor: 'theme',
               factory: buildTree => buildTree(
                 'theme',
-                this.siteFiles.theme,
+                this.currentSiteFiles.theme || [],
                 item => item.path
               )
             }
@@ -266,7 +299,7 @@
         }
         const parent = item.path.reduce(
           (t, p) => t[p] || {},
-          this.nodeMap[anchor]
+          this.nodeMap[anchor] || {}
         )
         const nodeId = parent[item.name]
         return nodeId !== undefined ? nodeId : null
@@ -277,9 +310,7 @@
         }
       },
       reload () {
-        if (this.currentSiteId) {
-          this.$api.updateSiteFiles()
-        }
+        this.updateSiteFiles()
       },
       build () {
         this.building = true

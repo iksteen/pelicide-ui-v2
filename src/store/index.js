@@ -7,16 +7,12 @@ import {
   SET_TOOLBAR_STYLE,
   SET_DARK_MODE,
   SET_SITES,
-  SET_CURRENT_SITE_ID,
-  SET_SITE_FILES,
   SET_EDITOR_ITEM,
   SET_EDITOR_CONTENT,
   SET_EDITOR_SCROLL_FRACTION
 } from './mutation-types'
 
 Vue.use(Vuex)
-
-const EMPTY_FILES = { content: [], theme: [] }
 
 export default new Vuex.Store({
   state: {
@@ -26,8 +22,6 @@ export default new Vuex.Store({
     toolbarStyle: localStorage.getItem('toolbar-style') || 'dense',
     darkMode: JSON.parse(localStorage.getItem('dark-mode') || 'false'),
     sites: [],
-    currentSiteId: null,
-    siteFiles: EMPTY_FILES,
     editorItem: null,
     editorContent: null,
     editorScrollFraction: 0.0
@@ -38,9 +32,6 @@ export default new Vuex.Store({
         acc[site.siteId] = site
         return acc
       }, {})
-    },
-    currentSite (state, getters) {
-      return state.currentSiteId && getters.sitesById[state.currentSiteId]
     }
   },
   mutations: {
@@ -61,13 +52,6 @@ export default new Vuex.Store({
     },
     [SET_SITES] (state, value) {
       state.sites = value
-    },
-    [SET_CURRENT_SITE_ID] (state, value) {
-      state.currentSiteId = value
-      state.siteFiles = EMPTY_FILES
-    },
-    [SET_SITE_FILES] (state, value) {
-      state.siteFiles = value
     },
     [SET_EDITOR_ITEM] (state, value) {
       state.editorItem = value
@@ -102,15 +86,6 @@ export default new Vuex.Store({
     },
     setSites ({ commit, getters, state }, value) {
       commit(SET_SITES, value)
-      if (getters.sitesById[state.currentSiteId] === undefined) {
-        commit(SET_CURRENT_SITE_ID, null)
-      }
-    },
-    setCurrentSiteId ({ commit }, value) {
-      commit(SET_CURRENT_SITE_ID, value)
-    },
-    setSiteFiles ({ commit }, value) {
-      commit(SET_SITE_FILES, value)
     },
     setEditorItem ({ commit }, value) {
       commit(SET_EDITOR_ITEM, value)
