@@ -63,9 +63,9 @@
 
 <script>
   import Panel from './panel'
-  import PanelSection from './panel-section'
-  import PanelToolbarButton from './panel-toolbar-button'
-  import PanelToolbarDivider from './panel-toolbar-divider'
+  import PanelSection from './panel/section'
+  import PanelToolbarButton from './panel/toolbar/button'
+  import PanelToolbarDivider from './panel/toolbar/divider'
   import Treeview from './treeview'
   import { mapActions, mapGetters, mapState } from 'vuex'
 

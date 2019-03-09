@@ -40,8 +40,8 @@
 </template>
 
 <script>
-  import PanelToolbarButton from '../../../components/panel-toolbar-button'
-  import PanelToolbarDivider from '../../../components/panel-toolbar-divider'
+  import PanelToolbarButton from '../../../components/panel/toolbar/button'
+  import PanelToolbarDivider from '../../../components/panel/toolbar/divider'
 
   export default {
     inject: ['getEditorComponent'],

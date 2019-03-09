@@ -23,7 +23,7 @@
 </style>
 
 <script>
-  import PanelToolbar from './panel-toolbar'
+  import PanelToolbar from './toolbar'
 
   export default {
     components: {

@@ -12,7 +12,7 @@
 </template>
 
 <script>
-  import TreeviewNode from './treeview-node'
+  import TreeviewNode from './node'
 
   export default {
     components: { TreeviewNode },

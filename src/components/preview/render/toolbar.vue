@@ -17,7 +17,7 @@
 </template>
 
 <script>
-  import PanelToolbarButton from './panel-toolbar-button'
+  import PanelToolbarButton from '../../panel/toolbar/button'
   import { mapState } from 'vuex'
 
   export default {

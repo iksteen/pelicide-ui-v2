@@ -88,9 +88,9 @@
 
 <script>
   import Panel from './panel'
-  import PanelToolbarButton from './panel-toolbar-button'
-  import PanelToolbarToggle from './panel-toolbar-toggle'
-  import PanelToolbarDivider from './panel-toolbar-divider'
+  import PanelToolbarButton from './panel/toolbar/button'
+  import PanelToolbarToggle from './panel/toolbar/toggle'
+  import PanelToolbarDivider from './panel/toolbar/divider'
   import { mapActions, mapState } from 'vuex'
 
   export default {

@@ -24,13 +24,13 @@
 </template>
 
 <script>
-  import Panel from './panel'
-  import PanelToolbarButton from './panel-toolbar-button'
-  import PanelToolbarDivider from './panel-toolbar-divider'
-  import PanelToolbarOptions from './panel-toolbar-options'
-  import PreviewDraft from './preview-draft'
-  import PreviewRender from './preview-render'
-  import PreviewRenderToolbar from './preview-render-toolbar'
+  import Panel from '../panel'
+  import PanelToolbarButton from '../panel/toolbar/button'
+  import PanelToolbarDivider from '../panel/toolbar/divider'
+  import PanelToolbarOptions from '../panel/toolbar/options'
+  import PreviewDraft from './draft'
+  import PreviewRender from './render'
+  import PreviewRenderToolbar from './render/toolbar'
   import { mapActions } from 'vuex'
 
   export default {

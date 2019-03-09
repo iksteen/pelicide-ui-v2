@@ -48,11 +48,11 @@
 </template>
 
 <script>
-  import NavigationPanel from './components/navigation-panel'
-  import EditorPanel from './components/editor-panel'
-  import PreviewPanel from './components/preview-panel'
+  import NavigationPanel from './components/navigation'
+  import EditorPanel from './components/editor'
+  import PreviewPanel from './components/preview'
   import { mapActions, mapState } from 'vuex'
-  import ConnectingDialog from './components/loading-dialog'
+  import ConnectingDialog from './components/loading'
 
   export default {
     components: {
