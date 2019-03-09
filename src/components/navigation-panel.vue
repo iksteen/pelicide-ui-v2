@@ -4,6 +4,7 @@
       <panel-toolbar-button
         icon="mdi-refresh"
         tooltip="Refresh project files"
+        disabled
       />
       <panel-toolbar-button
         icon="mdi-wrench"
@@ -14,16 +15,19 @@
       <panel-toolbar-button
         icon="mdi-cloud-upload"
         tooltip="Publish site"
+        disabled
       />
       <panel-toolbar-divider />
       <panel-toolbar-button
         icon="mdi-file-plus"
         tooltip="Add new article or page"
+        disabled
       />
       <v-spacer />
       <panel-toolbar-button
         icon="mdi-web"
         tooltip="Change active site"
+        disabled
       />
     </template>
 
