@@ -1,12 +1,12 @@
-import CodeMirrorBase from '../codemirror-base'
 import 'codemirror/mode/markdown/markdown'
-import MarkdownToolbar from './markdown-toolbar'
+import CodeMirror from '../codemirror'
+import Toolbar from './toolbar'
 
 export default {
-  extends: CodeMirrorBase,
+  extends: CodeMirror,
   inject: ['setEditorToolbar'],
   mounted () {
-    this.setEditorToolbar(MarkdownToolbar)
+    this.setEditorToolbar(Toolbar)
   },
   methods: {
     editorOptions () {

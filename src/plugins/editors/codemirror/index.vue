@@ -15,7 +15,7 @@
 </template>
 
 <style lang="stylus">
-  @import './codemirror-theme.styl'
+  @import 'theme.styl'
 
   .vue-codemirror
     @extend .cm-s-pelicide-background

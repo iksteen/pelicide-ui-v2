@@ -1,4 +1,4 @@
-import Component from './markdown-editor'
+import Editor from './editor'
 
 export default {
   install (vue) {
@@ -9,7 +9,7 @@ export default {
         'text/x-rmarkdown'
       ],
       'mdi-markdown',
-      Component
+      Editor
     )
   }
 }
