@@ -42,8 +42,8 @@
       </template>
 
       <treeview
-        :items="content"
-        :active="activeContentItemId"
+        :items="nodes.content"
+        :active="activeContentNodeId"
         @activate="activate"
       />
     </panel-section>
@@ -54,8 +54,8 @@
       </template>
 
       <treeview
-        :items="theme"
-        :active="activeThemeItemId"
+        :items="nodes.theme"
+        :active="activeThemeNodeId"
         @activate="activate"
       />
     </panel-section>
@@ -70,24 +70,63 @@
   import Treeview from './treeview'
   import { mapActions, mapGetters, mapState } from 'vuex'
 
-  function getTreeNode (nodeId, root, path) {
-    return path.reduce((parent, el) => {
-      let leaf = parent.leaves[el]
-      if (leaf === undefined) {
-        const node = {
-          id: nodeId(),
-          name: el,
-          icon: 'mdi-folder-outline',
-          children: []
+  function buildForest (nodeFactory, factories) {
+    let nextNodeId = 0
+    const nodeMap = {}
+
+    function getNodeId (path, name) {
+      path.reduce(
+        (t, p) => {
+          t[p] = t[p] || {}
+          return t[p]
+        },
+        nodeMap
+      )[name] = nextNodeId
+      return nextNodeId++
+    }
+
+    function getTreeNode (root, path) {
+      return path.reduce((parent, el) => {
+        if (!parent.leaves[el]) {
+          const node = {
+            id: `${parent.id}/${el}`,
+            name: el,
+            icon: 'mdi-folder-outline',
+            children: []
+          }
+          parent.nodes.push(node)
+          parent.leaves[el] = {
+            id: `${parent.id}/${el}`,
+            nodes: node.children,
+            leaves: {}
+          }
         }
-        parent.nodes.push(node)
-        leaf = parent.leaves[el] = {
-          nodes: node.children,
-          leaves: {}
-        }
+        return parent.leaves[el]
+      }, root)
+    }
+
+    function buildTree (rootId, items, pathGetter) {
+      const nodes = []
+      const root = {
+        id: rootId,
+        nodes,
+        leaves: {}
       }
-      return leaf
-    }, root)
+
+      items.forEach(item => {
+        const parent = getTreeNode(root, pathGetter(item))
+        parent.nodes.push(nodeFactory(item, getNodeId))
+      })
+      return nodes
+    }
+
+    return [
+      factories.reduce((tree, node) => {
+        tree[node.anchor] = node.factory(buildTree, () => nextNodeId++)
+        return tree
+      }, {}),
+      nodeMap
+    ]
   }
 
   export default {
@@ -100,122 +139,17 @@
     },
     data () {
       return {
-        activeItem: null,
-        building: false
+        building: false,
+        nodes: { content: [], theme: [] },
+        nodeMap: { content: {}, theme: {} }
       }
     },
     computed: {
-      content () {
-        let nodeId = 5 // 0...4 taken by static root nodes
-        return [
-          {
-            id: 0,
-            root: true,
-            name: 'Draft articles',
-            icon: 'mdi-folder',
-            children: this.buildTree(
-              () => nodeId++,
-              'content',
-              this.siteFiles.content.filter(
-                item => (
-                  item.type === 'pelican.contents.Article' &&
-                  item.status !== 'published'
-                )
-              ),
-              () => []
-            )
-          },
-          {
-            id: 1,
-            root: true,
-            name: 'Published articles',
-            icon: 'mdi-folder',
-            children: this.buildTree(
-              () => nodeId++,
-              'content',
-              this.siteFiles.content.filter(
-                item => (
-                  item.type === 'pelican.contents.Article' &&
-                  item.status === 'published'
-                )
-              ),
-              item => (item.meta && item.meta.category) ? [item.meta.category] : []
-            )
-          },
-          {
-            id: 2,
-            root: true,
-            name: 'Draft pages',
-            icon: 'mdi-folder',
-            children: this.buildTree(
-              () => nodeId++,
-              'content',
-              this.siteFiles.content.filter(
-                item => (
-                  item.type === 'pelican.contents.Page' &&
-                  item.status !== 'published'
-                )
-              ),
-              item => (item.meta && item.meta.category) ? [item.meta.category] : []
-            )
-          },
-          {
-            id: 3,
-            root: true,
-            name: 'Published pages',
-            icon: 'mdi-folder',
-            children: this.buildTree(
-              () => nodeId++,
-              'content',
-              this.siteFiles.content.filter(
-                item => (
-                  item.type === 'pelican.contents.Page' &&
-                  item.status === 'published')
-              ),
-              item => (item.meta && item.meta.category) ? [item.meta.category] : []
-            )
-          },
-          {
-            id: 4,
-            root: true,
-            name: 'Other',
-            icon: 'mdi-folder',
-            children: this.buildTree(
-              () => nodeId++,
-              'content',
-              this.siteFiles.content.filter(
-                item => (
-                  item.type !== 'pelican.contents.Article' &&
-                  item.type !== 'pelican.contents.Page'
-                )
-              ),
-              item => item.path
-            )
-          }
-        ]
+      activeContentNodeId () {
+        return this.activeNodeId('content')
       },
-      theme () {
-        let nodeId = 0
-        return this.buildTree(
-          () => nodeId++,
-          'theme',
-          this.siteFiles.theme,
-          item => item.path
-        )
-      },
-      activeContentItemId () {
-        return (
-          this.editorItem &&
-          this.editorItem.siteId === this.currentSiteId &&
-          this.editorItem.anchor === 'content'
-        ) ? this.editorItem.id : null
-      },
-      activeThemeItemId () {
-        return (
-          this.editorItem &&
-          this.editorItem.siteId === this.currentSiteId &&
-          this.editorItem.anchor === 'theme'
-        ) ? this.editorItem.id : null
+      activeThemeNodeId () {
+        return this.activeNodeId('theme')
       },
       meta () {
         return this.$pelicide.meta
@@ -223,10 +157,17 @@
       ...mapState(['siteFiles', 'currentSiteId', 'editorItem']),
       ...mapGetters(['currentSite'])
     },
+    watch: {
+      siteFiles () {
+        this.buildTree()
+      }
+    },
     mounted () {
       const meta = { Cmd: 'meta', Ctrl: 'ctrl' }[this.meta]
       this.$shortcut.add('reload', ['shift', meta, 'l'])
       this.$shortcut.add('build', ['shift', meta, 'e'])
+
+      this.buildTree()
     },
     destroyed () {
       const meta = { Cmd: 'meta', Ctrl: 'ctrl' }[this.meta]
@@ -234,31 +175,105 @@
       this.$shortcut.add('build', ['shift', meta, 'e'])
     },
     methods: {
-      buildTree (nodeId, anchor, items, pathGetter) {
-        const nodes = []
-        const root = {
-          nodes,
-          leaves: {}
-        }
-
-        items.forEach(item => {
-          const path = pathGetter(item)
-          const leaf = getTreeNode(nodeId, root, path)
-          const editor = this.$pelicide.editors[item.mimetype]
-          const icon = editor ? editor.icon : 'mdi-file-cancel-outline'
-          leaf.nodes.push({
-            id: nodeId(),
-            siteId: this.currentSiteId,
-            anchor,
-            icon,
-            ...item
-          })
-        })
-        return nodes
+      buildTree () {
+        [this.nodes, this.nodeMap] = buildForest(
+          (item, getNodeId) => {
+            const editor = this.$pelicide.editors[item.mimetype]
+            const icon = editor ? editor.icon : 'mdi-file-cancel-outline'
+            return {
+              id: getNodeId([item.anchor, ...item.path], item.name),
+              icon,
+              name: item.name,
+              item
+            }
+          },
+          [
+            {
+              anchor: 'content',
+              factory: buildTree => [
+                [
+                  'content/articles/draft',
+                  'Draft articles',
+                  item => (
+                    item.type === 'pelican.contents.Article' &&
+                    item.status !== 'published'
+                  ),
+                  () => []
+                ],
+                [
+                  'content/articles/published',
+                  'Published articles',
+                  item => (
+                    item.type === 'pelican.contents.Article' &&
+                    item.status === 'published'
+                  ),
+                  item => (item.meta && item.meta.category) ? [item.meta.category] : []
+                ],
+                [
+                  'content/pages/draft',
+                  'Draft pages',
+                  item => (
+                    item.type === 'pelican.contents.Page' &&
+                    item.status !== 'published'
+                  ),
+                  item => (item.meta && item.meta.category) ? [item.meta.category] : []
+                ],
+                [
+                  'content/pages/published',
+                  'Published pages',
+                  item => (
+                    item.type === 'pelican.contents.Page' &&
+                    item.status === 'published'
+                  ),
+                  item => (item.meta && item.meta.category) ? [item.meta.category] : []
+                ],
+                [
+                  'content/other',
+                  'Other',
+                  item => (
+                    item.type !== 'pelican.contents.Article' &&
+                    item.type !== 'pelican.contents.Page'
+                  ),
+                  item => item.path
+                ]
+              ].map(([rootId, name, itemFilter, pathGetter]) => ({
+                id: rootId,
+                root: true,
+                name,
+                icon: 'mdi-folder',
+                children: buildTree(
+                  rootId,
+                  this.siteFiles.content.filter(itemFilter),
+                  pathGetter
+                )
+              }))
+            },
+            {
+              anchor: 'theme',
+              factory: buildTree => buildTree(
+                'theme',
+                this.siteFiles.theme,
+                item => item.path
+              )
+            }
+          ]
+        )
       },
-      activate (item) {
-        if (item) {
-          this.$pelicide.editorOpen(item)
+      activeNodeId (anchor) {
+        const { editorItem: item } = this
+        if (!item || item.siteId !== this.currentSiteId || item.anchor !== anchor) {
+          return null
+        }
+        const parent = item.path.reduce(
+          (t, p) => t[p] || {},
+          this.nodeMap[anchor]
+        )
+        const nodeId = parent[item.name]
+        return nodeId !== undefined ? nodeId : null
+      },
+      activate (node) {
+        if (node && node.item) {
+          this.$pelicide.editorOpen(node.item)
         }
       },
       reload () {

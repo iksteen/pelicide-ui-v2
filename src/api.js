@@ -69,6 +69,16 @@ export default {
         },
         listSiteFiles (siteId) {
           return this.invoke('list_site_files', { site_id: siteId })
+            .then(result => {
+              return ['content', 'theme'].reduce((result, anchor) => {
+                result[anchor] = result[anchor].map(item => ({
+                  ...item,
+                  anchor,
+                  siteId
+                }))
+                return result
+              }, result)
+            })
         },
         updateSiteFiles () {
           const { currentSiteId } = this
