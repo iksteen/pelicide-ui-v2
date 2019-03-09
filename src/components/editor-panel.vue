@@ -132,13 +132,13 @@
       }
     },
     mounted () {
-      this.$pelicide.$on('open-in-editor', this.open)
+      this.$pelicide.$on('editor-open', this.open)
       if (this.editorItem) {
         this.open(this.editorItem)
       }
     },
     destroyed () {
-      this.$pelicide.$off('open-in-editor', this.open)
+      this.$pelicide.$off('editor-open', this.open)
     },
     methods: {
       getEditorComponent () {
