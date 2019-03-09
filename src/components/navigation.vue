@@ -3,8 +3,9 @@
     <template v-slot:toolbar>
       <panel-toolbar-button
         icon="mdi-refresh"
-        tooltip="Refresh project files"
-        disabled
+        :tooltip="`Refresh project files (${meta}-Shift-L)`"
+        :disabled="!currentSiteId"
+        @click="reload"
       />
       <panel-toolbar-button
         icon="mdi-wrench"
@@ -224,10 +225,12 @@
     },
     mounted () {
       const meta = { Cmd: 'meta', Ctrl: 'ctrl' }[this.meta]
+      this.$shortcut.add('reload', ['shift', meta, 'l'])
       this.$shortcut.add('build', ['shift', meta, 'e'])
     },
     destroyed () {
       const meta = { Cmd: 'meta', Ctrl: 'ctrl' }[this.meta]
+      this.$shortcut.add('reload', ['shift', meta, 'l'])
       this.$shortcut.add('build', ['shift', meta, 'e'])
     },
     methods: {
@@ -258,6 +261,11 @@
           this.$pelicide.editorOpen(item)
         }
       },
+      reload () {
+        if (this.currentSiteId) {
+          this.$api.updateSiteFiles()
+        }
+      },
       build () {
         this.building = true
         new Promise((resolve, reject) => {
@@ -277,6 +285,10 @@
       ])
     },
     shortcuts: {
+      reload (e) {
+        e.preventDefault()
+        this.reload()
+      },
       build (e) {
         e.preventDefault()
         this.build()

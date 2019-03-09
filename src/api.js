@@ -40,10 +40,8 @@ export default {
             this.autoSelectSite()
             return
           }
-          this.listSiteFiles(siteId).then(files => {
-            this.setSiteFiles(files)
-            this.ready = true
-          })
+          this.updateSiteFiles()
+            .then(() => { this.ready = true })
         }
       },
       methods: {
@@ -71,6 +69,19 @@ export default {
         },
         listSiteFiles (siteId) {
           return this.invoke('list_site_files', { site_id: siteId })
+        },
+        updateSiteFiles () {
+          const { currentSiteId } = this
+
+          if (!currentSiteId) {
+            return Promise.reject(new Error('No site selected'))
+          }
+
+          return this.listSiteFiles(currentSiteId).then(files => {
+            if (currentSiteId === this.currentSiteId) {
+              this.setSiteFiles(files)
+            }
+          })
         },
         autoSelectSite () {
           if (this.sites.length) {
