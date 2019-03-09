@@ -192,13 +192,13 @@
           })
         }
       },
-      _save () {
+      _save ({ resolve, reject }) {
         if (!this.changed || !this.editorItem) {
-          return Promise.resolve(null)
+          resolve(null)
         }
         const { siteId, anchor, path, name } = this.editorItem
         const content = this.editorContent
-        return this.$api.putFileContent(
+        this.$api.putFileContent(
           siteId,
           anchor,
           path,
@@ -207,16 +207,22 @@
         )
           .then(() => {
             this.originalContent = content
+            resolve(null)
           })
+          .catch(e => reject(e))
       },
       save () {
-        return this._save()
+        new Promise((resolve, reject) => {
+          this._save({ resolve, reject })
+        })
           .catch(({ message }) => this.setError({ text: `Failed to save ${name}: ${message}` }))
       },
       build () {
         const { editorItem: item } = this
         this.building = true
-        this._save()
+        new Promise((resolve, reject) => {
+          this._save({ resolve, reject })
+        })
           .then(
             () => {
               this.$api.build(item.siteId, [[item.path, item.name]])
