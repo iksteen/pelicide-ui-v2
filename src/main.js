@@ -4,7 +4,7 @@ import PerfectScrollbar from 'vue2-perfect-scrollbar'
 
 import Fullscreen from './plugins/fullscreen'
 
-import EditorRegistry from './plugins/editors'
+import Pelicide from './plugins'
 import MarkdownEditor from './plugins/editors/markdown'
 
 import App from './app.vue'
@@ -26,7 +26,7 @@ Vue.use(PerfectScrollbar)
 Vue.use(Fullscreen)
 
 // Register editor factory and editors
-Vue.use(EditorRegistry)
+Vue.use(Pelicide)
 Vue.use(MarkdownEditor)
 
 // Connect websocket

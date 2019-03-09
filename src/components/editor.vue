@@ -228,7 +228,7 @@
           .then(
             () => {
               this.$api.build(item.siteId, [[item.path, item.name]])
-                .then(() => this.$pelicide.$emit('preview-render-reload'))
+                .then(() => this.$pelicide.previewRenderReload())
                 .catch(e => this.setError({ text: `Failed to build page: ${e.message}.` }))
                 .then(() => { this.building = false })
             },

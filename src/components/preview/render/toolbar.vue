@@ -29,7 +29,7 @@
     },
     methods: {
       reload () {
-        this.$pelicide.$emit('preview-render-reload')
+        this.$pelicide.previewRenderReload()
       },
       open () {
         const win = window.open()

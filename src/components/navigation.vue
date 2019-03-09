@@ -244,17 +244,17 @@
       },
       activate (item) {
         if (item) {
-          this.$pelicide.openInEditor(item)
+          this.$pelicide.editorOpen(item)
         }
       },
       build () {
         this.building = true
         new Promise((resolve, reject) => {
-          this.$pelicide.$emit('editor-save', { resolve, reject })
+          this.$pelicide.editorSave({ resolve, reject })
         })
           .then(() => this.$api.build(this.currentSiteId))
           .then(() => {
-            this.$pelicide.$emit('preview-render-reload')
+            this.$pelicide.previewRenderReload()
             this.setMessage({ text: 'Site built' })
           })
           .catch(e => this.setError({ text: `Failed to build site: ${e.message}.` }))
