@@ -214,6 +214,7 @@
       _save ({ resolve, reject }) {
         if (!this.changed || !this.editorItem) {
           resolve(null)
+          return
         }
         const { siteId, anchor, path, name } = this.editorItem
         const content = this.editorContent
