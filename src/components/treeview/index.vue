@@ -92,7 +92,7 @@
     },
     methods: {
       activate (node) {
-        this.$emit('activate', node.data)
+        this.$emit('activate', node ? node.data : null)
       },
       setFocus (child) {
         this.focus = child
