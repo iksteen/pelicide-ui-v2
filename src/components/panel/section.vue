@@ -5,6 +5,9 @@
   >
     <div
       class="panel-section__header"
+      tabindex="0"
+      @keyup.space="toggle"
+      @keyup.enter="toggle"
     >
       <div class="panel-section__header__title">
         <slot name="title" />
