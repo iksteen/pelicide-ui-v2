@@ -167,7 +167,7 @@
         if (node.data.children) {
           node.isOpen = !node.isOpen
         } else {
-          this.activate(node)
+          this.activate(node.isActive ? null : node)
         }
       },
       setNodeOpen (value) {
