@@ -24,7 +24,7 @@
         class="treeview-node__children"
       >
         <treeview-node
-          v-for="child in item.children"
+          v-for="child in sortedChildren"
           :key="child.id"
           :item="child"
           :open="open"
@@ -86,6 +86,11 @@
       }
     },
     computed: {
+      sortedChildren () {
+        return this.item.children
+          ? this.item.children.slice().sort((a, b) => a.name.localeCompare(b.name))
+          : []
+      },
       isActive () {
         return this.active === this.item.id
       },

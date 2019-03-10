@@ -64,6 +64,7 @@
       <treeview
         :items="nodes.content"
         :active="activeContentNodeId"
+        :root-sortable="false"
         @activate="activate"
       />
     </panel-section>
