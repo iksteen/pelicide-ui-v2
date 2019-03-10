@@ -25,11 +25,31 @@
         disabled
       />
       <v-spacer />
-      <panel-toolbar-button
-        icon="mdi-web"
-        tooltip="Change active site"
-        disabled
-      />
+      <v-menu
+        offset-x
+      >
+        <template v-slot:activator="{ on }">
+          <panel-toolbar-button
+            icon="mdi-web"
+            tooltip="Change active site"
+            :disabled="sites.length < 2"
+            v-on="on"
+          />
+        </template>
+        <v-list>
+          <v-list-tile
+            v-for="site in sites"
+            :key="site.siteid"
+            @click="setCurrentSiteId(site.siteId)"
+          >
+            <v-list-tile-title
+              :class="{ 'font-weight-medium': site.siteId === currentSiteId }"
+            >
+              {{ site.name }}
+            </v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
     </template>
 
     <panel-section active>
@@ -169,6 +189,9 @@
         }
       },
       currentSiteId () {
+        this.currentSiteFiles = {}
+        this.nodes = {}
+        this.nodeMap = {}
         this.updateSiteFiles()
       },
       currentSiteFiles () {
@@ -190,6 +213,19 @@
     methods: {
       autoSelectSite () {
         this.currentSiteId = this.sites.length ? this.sites[0].siteId : null
+      },
+      setCurrentSiteId (siteId) {
+        const { editorItem: item } = this
+        if (item && item.siteId !== siteId) {
+          this.$pelicide.editorSave()
+            .then(() => {
+              this.setEditorItem(null)
+              this.currentSiteId = siteId
+            })
+            .catch(e => this.setError(e.message))
+        } else {
+          this.currentSiteId = siteId
+        }
       },
       updateSiteFiles () {
         const { currentSiteId } = this
