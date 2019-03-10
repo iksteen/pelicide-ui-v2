@@ -25,11 +25,10 @@ export default {
             }
           })
         },
-        editorOpen (item) {
-          this.$emit('editor-open', item)
-        },
-        editorSave ({ resolve, reject }) {
-          this.$emit('editor-save', { resolve, reject })
+        editorSave () {
+          return new Promise((resolve, reject) => {
+            this.$emit('editor-save', { resolve, reject })
+          })
         },
         previewRenderReload () {
           this.$emit('preview-render-reload')

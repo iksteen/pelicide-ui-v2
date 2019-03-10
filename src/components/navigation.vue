@@ -306,7 +306,7 @@
       },
       activate (node) {
         if (node && node.item) {
-          this.$pelicide.editorOpen(node.item)
+          this.setEditorItem(node.item)
         }
       },
       reload () {
@@ -314,9 +314,7 @@
       },
       build () {
         this.building = true
-        new Promise((resolve, reject) => {
-          this.$pelicide.editorSave({ resolve, reject })
-        })
+        this.$pelicide.editorSave()
           .then(() => this.$api.build(this.currentSiteId))
           .then(() => {
             this.$pelicide.previewRenderReload()
@@ -327,7 +325,8 @@
       },
       ...mapActions([
         'setMessage',
-        'setError'
+        'setError',
+        'setEditorItem'
       ])
     },
     shortcuts: {

@@ -8,6 +8,9 @@ export default {
   mounted () {
     this.setEditorToolbar(Toolbar)
   },
+  destroyed () {
+    this.setEditorToolbar(null)
+  },
   methods: {
     editorOptions () {
       return {

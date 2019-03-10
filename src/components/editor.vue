@@ -93,6 +93,12 @@
   import PanelToolbarDivider from './panel/toolbar/divider'
   import { mapActions, mapState } from 'vuex'
 
+  const EmptyEditor = {
+    render (h) {
+      return h('div')
+    }
+  }
+
   export default {
     components: {
       Panel,
@@ -103,7 +109,7 @@
     data () {
       return {
         originalContent: null,
-        editorComponent: null,
+        editorComponent: EmptyEditor,
         editorToolbar: null,
         building: false
       }
@@ -125,13 +131,8 @@
       ])
     },
     watch: {
-      editorComponent (newComponent, oldComponent) {
-        if (newComponent !== oldComponent) {
-          this.editorToolbar = null
-        }
-
-        this.setEditorContent(null)
-        this.originalContent = null
+      editorItem (item) {
+        this.open(item)
       }
     },
     mounted () {
@@ -142,11 +143,8 @@
       this.$shortcut.add('preview', ['shift', meta, 'p'])
       this.$shortcut.add('focus', [meta, 'enter'])
 
-      this.$pelicide.$on('editor-open', this.open)
       this.$pelicide.$on('editor-save', this._save)
-      if (this.editorItem) {
-        this.open(this.editorItem)
-      }
+      this.open(this.editorItem)
     },
     destroyed () {
       const meta = { Cmd: 'meta', Ctrl: 'ctrl' }[this.meta]
@@ -156,7 +154,6 @@
       this.$shortcut.remove('preview', ['shift', meta, 'p'])
       this.$shortcut.remove('focus', [meta, 'enter'])
 
-      this.$pelicide.$off('editor-open', this.open)
       this.$pelicide.$off('editor-save', this._save)
     },
     methods: {
@@ -173,8 +170,9 @@
         }[this.toolbarStyle] || 'normal')
       },
       open (item) {
-        this.setEditorItem(null)
-        this.editorComponent = null
+        this.editorComponent = EmptyEditor
+        this.setEditorContent(null)
+        this.originalContent = null
 
         if (item === null) {
           return
@@ -188,28 +186,24 @@
 
         this.editorComponent = editor.component
 
-        if (this.editorComponent) {
-          this.setEditorItem(item).then(() => {
-            Promise.all([
-              this.$api.getFileContent(
-                item.siteId,
-                item.anchor,
-                item.path,
-                item.name
-              ),
-              this.$nextTick()
-            ])
-              .then(([{ content }]) => {
-                if (this.editorItem === item) {
-                  this.originalContent = content
-                  this.setEditorContent(content)
-                }
-              })
-              .catch(({ message }) => {
-                this.setError({ text: `Failed to load ${item.name}: ${message}.` })
-              })
+        Promise.all([
+          this.$api.getFileContent(
+            item.siteId,
+            item.anchor,
+            item.path,
+            item.name
+          ),
+          this.$nextTick()
+        ])
+          .then(([{ content }]) => {
+            if (this.editorItem === item) {
+              this.originalContent = content
+              this.setEditorContent(content)
+            }
           })
-        }
+          .catch(({ message }) => {
+            this.setError({ text: `Failed to load ${item.name}: ${message}.` })
+          })
       },
       _save ({ resolve, reject }) {
         if (!this.changed || !this.editorItem) {
