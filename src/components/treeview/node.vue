@@ -4,17 +4,21 @@
     :class="classes"
   >
     <div
+      ref="label"
       class="treeview-node__label"
-      @[handleClick]="click"
-      @[handleDblclick]="dblclick"
     >
       <v-icon
-        v-text="item.children && item.children.length ? 'mdi-menu-down': ''"
+        @click="isOpen = !isOpen"
+        v-text="data.children && data.children.length ? 'mdi-menu-down': ''"
       />
-      <div class="treeview-node__content">
-        <v-icon v-text="item.icon" />
+      <div
+        class="treeview-node__content"
+        @click="click"
+        @dblclick="dblclick"
+      >
+        <v-icon v-text="data.icon" />
         <div class="treeview-node__title">
-          {{ item.name }}
+          {{ data.name }}
         </div>
       </div>
     </div>
@@ -24,11 +28,14 @@
         class="treeview-node__children"
       >
         <treeview-node
-          v-for="child in sortedChildren"
-          :key="child.id"
-          :item="child"
+          v-for="nodeData in sortedChildData"
+          ref="childNodes"
+          :key="nodeData.id"
+          :data="nodeData"
           :open="open"
+          :focus="focus"
           :active="active"
+          @focus="setFocus"
           @activate="activate"
         />
       </div>
@@ -37,6 +44,15 @@
 </template>
 
 <style lang="stylus">
+  @import '~vuetify/src/stylus/bootstrap'
+  @import '~vuetify/src/stylus/theme'
+
+  treeview-node($material)
+    > .treeview-node__label > .treeview-node__content
+      background-color: $material.dividers
+
+  theme(treeview-node, "treeview-node--focus")
+
   .treeview-node
     user-select none
 
@@ -55,6 +71,7 @@
 
     &__title
       margin-left 6px
+      margin-right 2px
 
     &__children
       margin-left: 24px
@@ -69,14 +86,21 @@
 </style>
 
 <script>
+  import Themeable from 'vuetify/lib/mixins/themeable'
+
   export default {
     name: 'TreeviewNode',
+    mixins: [Themeable],
     props: {
       open: {
         type: Object,
         default: null
       },
-      item: {
+      focus: {
+        type: Object,
+        default: null
+      },
+      data: {
         type: Object,
         default () { return {} }
       },
@@ -86,51 +110,64 @@
       }
     },
     computed: {
-      sortedChildren () {
-        return this.item.children
-          ? this.item.children.slice().sort((a, b) => a.name.localeCompare(b.name))
-          : []
-      },
-      isActive () {
-        return this.active === this.item.id
-      },
-      isOpen: {
-        get () {
-          return this.open['' + this.item.id] === true
-        },
-        set (val) {
-          if (val) {
-            this.$set(this.open, '' + this.item.id, true)
-          } else {
-            this.$delete(this.open, '' + this.item.id)
-          }
-        }
-      },
       classes () {
         return {
           'treeview-node--open': this.isOpen,
-          'treeview-node--active': this.isActive
+          'treeview-node--active': this.isActive,
+          'treeview-node--focus': this.hasFocus,
+          ...this.themeClasses
         }
       },
-      handleClick () {
-        return this.item.children ? 'click' : null
+      hasFocus () {
+        return this.focus === this
       },
-      handleDblclick () {
-        return this.item.children === undefined ? 'dblclick' : null
+      sortedChildData () {
+        return this.data.children
+          ? this.data.children.slice().sort((a, b) => a.name.localeCompare(b.name))
+          : []
+      },
+      isActive () {
+        return this.active === this.data.id
+      },
+      isOpen: {
+        get () {
+          return this.data.children && this.data.children.length && this.open['' + this.data.id] === true
+        },
+        set (val) {
+          if (this.data.children && this.data.children.length) {
+            if (val) {
+              this.$set(this.open, '' + this.data.id, true)
+            } else {
+              this.$delete(this.open, '' + this.data.id)
+            }
+          }
+        }
       }
     },
     methods: {
-      activate (item) {
-        this.$emit('activate', item)
+      setFocus (node) {
+        this.$emit('focus', node)
+      },
+      activate (node) {
+        this.$emit('activate', node)
       },
       click () {
-        this.isOpen = !this.isOpen
+        this.setFocus(this)
       },
       dblclick () {
-        if (this.isActive) {
+        if (this.data.children) {
+          this.isOpen = !this.isOpen
+        } else if (this.isActive) {
           this.activate(null)
         } else {
-          this.activate(this.item)
+          this.activate(this)
+        }
+      },
+      toggle (e) {
+        if (this.data.children) {
+          this.click()
+        } else {
+          this.dblclick()
         }
       }
     }

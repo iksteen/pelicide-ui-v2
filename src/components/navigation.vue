@@ -62,7 +62,7 @@
       </template>
 
       <treeview
-        :items="nodes.content"
+        :data="nodes.content"
         :active="activeContentNodeId"
         :root-sortable="false"
         @activate="activate"
@@ -75,7 +75,7 @@
       </template>
 
       <treeview
-        :items="nodes.theme"
+        :data="nodes.theme"
         :active="activeThemeNodeId"
         @activate="activate"
       />
