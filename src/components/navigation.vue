@@ -5,13 +5,13 @@
         icon="mdi-refresh"
         :tooltip="`Refresh project files (${meta}-Shift-L)`"
         :disabled="!currentSiteId"
-        @click="reload"
+        @click="reload(); focus()"
       />
       <panel-toolbar-button
         icon="mdi-wrench"
         :tooltip="`Save and build site (${meta}-Shift-E)`"
         :disabled="!currentSiteId || building"
-        @click="build"
+        @click="build(); focus()"
       />
       <panel-toolbar-button
         icon="mdi-cloud-upload"
@@ -40,7 +40,7 @@
           <v-list-tile
             v-for="site in sites"
             :key="site.siteid"
-            @click="setCurrentSiteId(site.siteId)"
+            @click="setCurrentSiteId(site.siteId); focus()"
           >
             <v-list-tile-title
               :class="{ 'font-weight-medium': site.siteId === currentSiteId }"
@@ -216,15 +216,7 @@
       },
       navigationVisible (value) {
         if (value) {
-          if (this.lastFocus) {
-            this.lastFocus.focus()
-          } else if (this.$refs.contentSection.isActive) {
-            this.$refs.contentTree.$el.focus()
-          } else if (this.$refs.themeSection.isActive) {
-            this.$refs.themeTree.$el.focus()
-          } else {
-            this.$refs.contentSection.focus()
-          }
+          this.focus()
         }
       }
     },
@@ -241,6 +233,17 @@
       this.$shortcut.add('build', ['shift', meta, 'e'])
     },
     methods: {
+      focus () {
+        if (this.lastFocus) {
+          this.lastFocus.focus()
+        } else if (this.$refs.contentSection.isActive) {
+          this.$refs.contentTree.$el.focus()
+        } else if (this.$refs.themeSection.isActive) {
+          this.$refs.themeTree.$el.focus()
+        } else {
+          this.$refs.contentSection.focus()
+        }
+      },
       autoSelectSite () {
         this.currentSiteId = this.sites.length ? this.sites[0].siteId : null
       },
