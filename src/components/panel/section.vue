@@ -4,8 +4,10 @@
     :class="classes"
   >
     <div
+      ref="header"
       class="panel-section__header"
       tabindex="0"
+      @focus="$emit('focus', $refs.header)"
       @keyup.space="toggle"
       @keyup.enter="toggle"
     >

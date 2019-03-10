@@ -52,7 +52,11 @@
       </v-menu>
     </template>
 
-    <panel-section active>
+    <panel-section
+      ref="contentSection"
+      active
+      @focus="el => lastFocus = el"
+    >
       <template v-slot:title>
         <span
           v-if="currentSite"
@@ -62,22 +66,29 @@
       </template>
 
       <treeview
+        ref="contentTree"
         :data="nodes.content"
         :active="activeContentNodeId"
         :root-sortable="false"
         @activate="activate"
+        @focus.native="lastFocus = $refs.contentTree.$el"
       />
     </panel-section>
 
-    <panel-section>
+    <panel-section
+      ref="themeSection"
+      @focus="el => lastFocus = el"
+    >
       <template v-slot:title>
         Theme
       </template>
 
       <treeview
+        ref="themeTree"
         :data="nodes.theme"
         :active="activeThemeNodeId"
         @activate="activate"
+        @focus.native="lastFocus = $refs.themeTree.$el"
       />
     </panel-section>
   </panel>
@@ -160,6 +171,7 @@
     },
     data () {
       return {
+        lastFocus: null,
         currentSiteId: null,
         currentSiteFiles: {},
         nodes: {},
@@ -180,7 +192,11 @@
       meta () {
         return this.$pelicide.meta
       },
-      ...mapState(['sites', 'editorItem']),
+      ...mapState([
+        'sites',
+        'editorItem',
+        'navigationVisible'
+      ]),
       ...mapGetters(['sitesById'])
     },
     watch: {
@@ -197,6 +213,19 @@
       },
       currentSiteFiles () {
         this.buildTree()
+      },
+      navigationVisible (value) {
+        if (value) {
+          if (this.lastFocus) {
+            this.lastFocus.focus()
+          } else if (this.$refs.contentSection.isActive) {
+            this.$refs.contentTree.$el.focus()
+          } else if (this.$refs.themeSection.isActive) {
+            this.$refs.themeTree.$el.focus()
+          } else {
+            this.$refs.contentSection.focus()
+          }
+        }
       }
     },
     mounted () {
@@ -345,6 +374,7 @@
         if (node && node.item) {
           this.setEditorItem(node.item)
         }
+        this.setNavigationVisible(false)
       },
       reload () {
         this.updateSiteFiles()
@@ -363,7 +393,8 @@
       ...mapActions([
         'setMessage',
         'setError',
-        'setEditorItem'
+        'setEditorItem',
+        'setNavigationVisible'
       ])
     },
     shortcuts: {

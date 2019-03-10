@@ -47,12 +47,12 @@
         :value="darkMode"
         icon="mdi-theme-light-dark"
         tooltip="Toggle dark mode"
-        @change="setDarkMode"
+        @change="v => { setDarkMode(v); $refs.editor.focus() }"
       />
       <panel-toolbar-button
         icon="mdi-settings"
         tooltip="Toggle toolbar size"
-        @click="changeToolbarStyle"
+        @click="v => { changeToolbarStyle(v); $refs.editor.focus() }"
       />
       <panel-toolbar-button
         class="hidden-md-and-up"
@@ -65,7 +65,7 @@
         class="hidden-sm-and-down"
         icon="mdi-eye-outline"
         :tooltip="`Toggle preview panel (${meta}-Shift-P)`"
-        @change="setPreviewVisible"
+        @change="v => { setPreviewVisible(v); $refs.editor.focus() }"
       />
     </template>
 
@@ -94,6 +94,10 @@
   import { mapActions, mapState } from 'vuex'
 
   const EmptyEditor = {
+    methods: {
+      focus () {
+      }
+    },
     render (h) {
       return h('div')
     }
@@ -131,6 +135,11 @@
       ])
     },
     watch: {
+      navigationVisible (value) {
+        if (!value) {
+          this.$refs.editor.focus()
+        }
+      },
       editorItem (item) {
         this.open(item)
       }
@@ -200,6 +209,7 @@
               this.originalContent = content
               this.setEditorContent(content)
             }
+            this.$refs.editor.focus()
           })
           .catch(({ message }) => {
             this.setError({ text: `Failed to load ${item.name}: ${message}.` })
@@ -230,6 +240,7 @@
           this._save({ resolve, reject })
         })
           .catch(({ message }) => this.setError({ text: `Failed to save ${name}: ${message}` }))
+          .then(() => this.$refs.editor.focus())
       },
       build () {
         const { editorItem: item } = this
@@ -246,6 +257,7 @@
             },
             ({ message }) => this.setError({ text: `Failed to save ${item.name}: ${message}` })
           )
+          .then(() => this.$refs.editor.focus())
       },
       ...mapActions([
         'setError',
