@@ -41,11 +41,25 @@ export default {
         },
         listSites () {
           return this.invoke('list_sites').then(
-            sites => sites.map(({ site_id: siteId, name, formats }) => ({
-              siteId,
-              name,
-              formats
-            }))
+            sites => sites.map(
+              ({
+                site_id: siteId,
+                name,
+                formats,
+                content,
+                pages,
+                articles,
+                theme
+              }) => ({
+                siteId,
+                name,
+                formats,
+                content,
+                pages,
+                articles,
+                theme
+              })
+            )
           )
         },
         listSiteFiles (siteId) {
