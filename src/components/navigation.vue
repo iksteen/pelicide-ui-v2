@@ -263,7 +263,7 @@
       updateSiteFiles () {
         const { currentSiteId } = this
         if (currentSiteId) {
-          this.$api.listSiteFiles(currentSiteId)
+          return this.$api.listSiteFiles(currentSiteId)
             .then(files => {
               if (this.currentSiteId === currentSiteId) {
                 this.currentSiteFiles = files
@@ -275,6 +275,7 @@
             })
         } else {
           this.currentSiteFiles = {}
+          return Promise.resolve()
         }
       },
       buildTree () {
