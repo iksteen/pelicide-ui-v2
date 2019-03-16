@@ -174,6 +174,12 @@
         if (this.focus && this.focus.data.children) {
           this.focus.isOpen = value
         }
+      },
+      setOpen (path) {
+        this.open = path.reduce((acc, nodeId) => {
+          acc[nodeId] = true
+          return acc
+        }, {})
       }
     }
   }
