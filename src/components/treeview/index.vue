@@ -80,7 +80,7 @@
         }
       },
       open () {
-        let node = this.focus.$parent
+        let node = this.focus && this.focus.$parent
         while (node && node !== this) {
           if (!node.isOpen) {
             this.focus = node
@@ -171,10 +171,7 @@
         }
       },
       setNodeOpen (value) {
-        if (!this.focus) {
-          return
-        }
-        if (this.focus.data.children) {
+        if (this.focus && this.focus.data.children) {
           this.focus.isOpen = value
         }
       }
