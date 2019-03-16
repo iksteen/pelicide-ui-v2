@@ -9,7 +9,8 @@ import {
   SET_SITES,
   SET_EDITOR_ITEM,
   SET_EDITOR_CONTENT,
-  SET_EDITOR_SCROLL_FRACTION
+  SET_EDITOR_SCROLL_FRACTION,
+  SET_AUTHOR_NAME
 } from './mutation-types'
 
 Vue.use(Vuex)
@@ -24,7 +25,8 @@ export default new Vuex.Store({
     sites: [],
     editorItem: null,
     editorContent: null,
-    editorScrollFraction: 0.0
+    editorScrollFraction: 0.0,
+    author: localStorage.getItem('author-name') || ''
   },
   getters: {
     sitesById (state) {
@@ -61,6 +63,9 @@ export default new Vuex.Store({
     },
     [SET_EDITOR_SCROLL_FRACTION] (state, value) {
       state.editorScrollFraction = value
+    },
+    [SET_AUTHOR_NAME] (state, value) {
+      state.authorName = value
     }
   },
   actions: {
@@ -95,6 +100,10 @@ export default new Vuex.Store({
     },
     setEditorScrollFraction ({ commit }, value) {
       commit(SET_EDITOR_SCROLL_FRACTION, value)
+    },
+    setAuthorName ({ commit }, value) {
+      localStorage.setItem('author-name', value)
+      commit(SET_AUTHOR_NAME, value)
     }
   }
 })
