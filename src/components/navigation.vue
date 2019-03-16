@@ -255,7 +255,7 @@
               this.setEditorItem(null)
               this.currentSiteId = siteId
             })
-            .catch(e => this.setError(e.message))
+            .catch(e => this.setError({ text: `Failed to save document: ${e.message}.` }))
         } else {
           this.currentSiteId = siteId
         }
@@ -270,7 +270,7 @@
               }
             })
             .catch(e => {
-              this.setError(e.message)
+              this.setError({ text: `Failed to update file list: ${e.message}.` })
               this.currentSiteFiles = {}
             })
         } else {
