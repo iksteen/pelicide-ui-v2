@@ -105,6 +105,12 @@ export default {
             paths: paths
           })
         },
+        slugify (siteId, title) {
+          return this.invoke('slugify', {
+            site_id: siteId,
+            title
+          })
+        },
         ...mapActions(['setSites'])
       },
       sockets: {
