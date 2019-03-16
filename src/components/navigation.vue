@@ -19,11 +19,28 @@
         disabled
       />
       <panel-toolbar-divider />
-      <panel-toolbar-button
-        icon="mdi-file-plus"
-        tooltip="Add new article or page"
-        disabled
-      />
+      <v-menu
+        offset-x
+      >
+        <template v-slot:activator="{ on }">
+          <panel-toolbar-button
+            icon="mdi-file-plus"
+            tooltip="Add new article or page"
+            v-on="on"
+          />
+        </template>
+        <v-list>
+          <v-list-tile
+            v-for="template in $pelicide.templates"
+            :key="template.id"
+            @click="create(template)"
+          >
+            <v-list-tile-title>
+              {{ template.name }}
+            </v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
       <v-spacer />
       <v-menu
         offset-x
@@ -91,10 +108,12 @@
         @focus.native="lastFocus = $refs.themeTree.$el"
       />
     </panel-section>
+    <create-dialog ref="createDialog" />
   </panel>
 </template>
 
 <script>
+  import CreateDialog from './create-dialog'
   import Panel from './panel'
   import PanelSection from './panel/section'
   import PanelToolbarButton from './panel/toolbar/button'
@@ -163,6 +182,7 @@
 
   export default {
     components: {
+      CreateDialog,
       Panel,
       PanelSection,
       PanelToolbarButton,
@@ -393,6 +413,40 @@
           })
           .catch(e => this.setError({ text: `Failed to build site: ${e.message}.` }))
           .then(() => { this.building = false })
+      },
+      findNode (anchor, nodeId) {
+        function find (nodes, path = []) {
+          return nodes.reduce((acc, node) => {
+            if (acc) {
+              return acc
+            } else if (node.children) {
+              return find(node.children, [...path, node.id])
+            } else if (node.id === nodeId) {
+              return [path, node]
+            } else {
+              return null
+            }
+          }, null)
+        }
+        return find(this.nodes[anchor])
+      },
+      create (template) {
+        this.$refs.createDialog.show(this.currentSiteId, template)
+          .then(({ siteId, anchor, path, name, content }) => {
+            return this.$api.putFileContent(siteId, anchor, path, name, content)
+              .then(() => this.updateSiteFiles())
+              .then(() => {
+                const parent = path.reduce(
+                  (t, p) => t[p] || {},
+                  this.nodeMap[anchor] || {}
+                )
+                const nodeId = parent[name]
+                const [nodePath, node] = this.findNode(anchor, nodeId)
+                this.$refs[`${anchor}Tree`].setOpen(nodePath)
+                this.activate(node)
+              })
+          })
+          .catch(e => this.setError({ text: `Failed to create new document: ${e.message}.` }))
       },
       ...mapActions([
         'setMessage',
