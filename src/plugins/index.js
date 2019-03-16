@@ -5,7 +5,8 @@ export default {
     vue.prototype.$pelicide = new Vue({
       data () {
         return {
-          editors: {}
+          editors: {},
+          templates: []
         }
       },
       computed: {
@@ -24,6 +25,9 @@ export default {
               component
             }
           })
+        },
+        registerTemplate (template) {
+          this.templates.push(template)
         },
         editorSave () {
           return new Promise((resolve, reject) => {
